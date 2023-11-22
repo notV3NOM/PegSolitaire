@@ -1,0 +1,62 @@
+.boardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 200px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 3px solid;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.peg {
+  height: 25px;
+  width: 25px;
+  background-color: blue;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.row:nth-child(n + 1):nth-child(-n + 2) {
+  .cell:nth-child(n + 1):nth-child(-n + 2) {
+    display: none;
+  }
+  .cell:nth-child(n + 6):nth-child(-n + 7) {
+    display: none;
+  }
+}
+
+.row:nth-child(n + 6):nth-child(-n + 7) {
+  .cell:nth-child(n + 1):nth-child(-n + 2) {
+    display: none;
+  }
+  .cell:nth-child(n + 6):nth-child(-n + 7) {
+    display: none;
+  }
+}
+
+.row:nth-child(2n) {
+  .cell {
+    border-top: none;
+    border-bottom: none;
+  }
+}
+
+.row:nth-child(n) {
+  .cell:nth-child(2n) {
+    border-left: none;
+    border-right: none;
+  }
+}
