@@ -29,6 +29,14 @@
   display: inline-block;
 }
 
+.player {
+  height: 25px;
+  width: 25px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 .row:nth-child(n + 1):nth-child(-n + 2) {
   .cell:nth-child(n + 1):nth-child(-n + 2) {
     display: none;
