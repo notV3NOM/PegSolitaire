@@ -1,7 +1,9 @@
 var board = document.getElementById("boardContainerID");
 var buttonContainer = document.getElementById("buttonContainerID");
-var i, j, playerPosition;
+var i, j, k, playerPosition;
 var boardSize = 7;
+var nMoves = 0;
+var lifeTime = 100;
 
 // Create the board
 for (i = 0; i < boardSize; ++i) {
@@ -37,7 +39,7 @@ for (i = 0; i < boardSize; ++i) {
 // Function to return valid Moves
 // Uses the current player position and returns a list of cells to which player can move
 var GetValidMoves = (playerPosition) => {
-  console.log("Checking Valid Moves for : ", playerPosition);
+  if (!InsideBoard(playerPosition)) return [];
   let moveUp = [-2, 0];
   let moveDown = [2, 0];
   let moveLeft = [0, -2];
@@ -53,21 +55,21 @@ var GetValidMoves = (playerPosition) => {
   tempMoves.push(playerUp, playerDown, playerLeft, playerRight);
 
   tempMoves.forEach((move) => {
-    if (InsideBoard(move)) {
+    if (InsideBoard(move) && IsEmpty(move)) {
       validMoves.push(move);
     }
   });
 
-  console.log("Valid moves : ", validMoves);
   return validMoves;
 };
 
 // Function to perform Move
 // Takes a cell to be moved to and moves the player
 var MovePeg = (startPos, endPos) => {
+  let movePerformed = false;
   GetValidMoves(startPos).forEach((move) => {
     if (move[0] === endPos[0] && move[1] === endPos[1]) {
-      console.log("Moving To : ", endPos);
+      console.log("Moving ", startPos, " to ", endPos);
       RemovePeg(endPos);
       RemovePeg(startPos);
       RemovePeg(FindBetweenPeg(startPos, endPos));
@@ -75,8 +77,12 @@ var MovePeg = (startPos, endPos) => {
       peg.className = "peg";
       peg.textContent = "" + endPos[0] + endPos[1];
       document.getElementById("" + endPos[0] + endPos[1]).appendChild(peg);
+      movePerformed = true;
+      nMoves++;
+      UpdateStats();
     }
   });
+  return movePerformed;
 };
 
 // Util Function to "add" tuples
@@ -87,10 +93,18 @@ var Add = (a, b) => {
 // Util Function to check if position is inside board
 var InsideBoard = (position) => {
   if (
-    (position[0] < 3 && position[1] < 3) ||
-    (position[0] < 3 && position[1] > 5) ||
-    (position[0] > 5 && position[1] < 3) ||
-    (position[0] > 5 && position[1] > 5)
+    position[0] < 0 ||
+    position[0] > 6 ||
+    position[1] < 0 ||
+    position[1] > 6
+  ) {
+    return false;
+  }
+  if (
+    (position[0] < 2 && position[1] < 2) ||
+    (position[0] < 2 && position[1] > 4) ||
+    (position[0] > 4 && position[1] < 2) ||
+    (position[0] > 4 && position[1] > 4)
   ) {
     return false;
   }
@@ -98,26 +112,12 @@ var InsideBoard = (position) => {
 };
 
 // Util Function to check if peg exists on position
-// var Exists = (position) => {
-//   if (
-//     position[0] < 0 ||
-//     position[0] > 6 ||
-//     position[1] < 0 ||
-//     position[1] > 6
-//   ) {
-//     return false;
-//   }
-//   if (
-//     document.getElementById("" + position[0] + position[1]).hasChildNodes() &&
-//     window.getComputedStyle(
-//       document.getElementById("" + position[0] + position[1]),
-//       null
-//     ).display === "flex"
-//   ) {
-//     return true;
-//   }
-//   return false;
-// };
+var IsEmpty = (position) => {
+  if (document.getElementById("" + position[0] + position[1]).hasChildNodes()) {
+    return false;
+  }
+  return true;
+};
 
 // Util Function to remove peg
 var RemovePeg = (position) => {
@@ -141,5 +141,72 @@ var FindBetweenPeg = (startingPos, EndPos) => {
   }
 };
 
-// Util Function to prepare controls
-var SetupControls = () => {};
+// Util Function to find all pegs that can be moved
+var MoveablePegs = () => {
+  let moveablePegs = [];
+  for (let i = 0; i < boardSize; ++i) {
+    for (let j = 0; j < boardSize; ++j) {
+      if (GetValidMoves([i, j]).length) {
+        moveablePegs.push([i, j]);
+      }
+    }
+  }
+  return moveablePegs;
+};
+
+// Util Function to find all possible moves
+var AllowedMoves = () => {
+  let allowedMoves = [];
+  MoveablePegs().forEach((startPos) => {
+    GetValidMoves(startPos).forEach((endPos) => {
+      allowedMoves.push([startPos, endPos]);
+    });
+  });
+  return allowedMoves;
+};
+
+// Util Function to perform Random Move
+var RandomMove = () => {
+  let allowedMoves = AllowedMoves();
+  if (!allowedMoves.length) return;
+  const randomElement =
+    allowedMoves[Math.floor(Math.random() * allowedMoves.length)];
+  MovePeg(randomElement[0], randomElement[1]);
+};
+
+// Util Functin to count empty Pegs
+var EmptyPegs = () => {
+  let count = 0;
+  for (let i = 0; i < boardSize; ++i) {
+    for (let j = 0; j < boardSize; ++j) {
+      if (InsideBoard([i, j]) && IsEmpty([i, j])) {
+        count++;
+      }
+    }
+  }
+  return count;
+};
+
+// Util Function to setup stats
+var UpdateStats = () => {
+  buttonContainer.textContent =
+    "" + nMoves + " move(s) done" + " Pegs Remaining : " + (33 - EmptyPegs());
+  //   console.log(
+  //     "Move ",
+  //     nMoves,
+  //     " No. of Allowed Moves : ",
+  //     AllowedMoves().length
+  //   );
+};
+
+// Game Lifecycle
+var RunGame = () => {
+  for (k = 0; k <= lifeTime; k++) {
+    RandomMove();
+  }
+  //   while (MoveablePegs().length >= 4) {
+  //     RandomMove();
+  //   }
+};
+
+RunGame();
