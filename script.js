@@ -1,7 +1,7 @@
 var board = document.getElementById("boardContainerID");
-var i, j;
+var buttonContainer = document.getElementById("buttonContainerID");
+var i, j, playerPosition;
 var boardSize = 7;
-var playerPosition = [Math.floor(boardSize / 2) + 2, Math.floor(boardSize / 2)];
 
 // Create the board
 for (i = 0; i < boardSize; ++i) {
@@ -19,34 +19,24 @@ for (i = 0; i < boardSize; ++i) {
   board.appendChild(row);
 }
 
-// Prepare the board with elements
+// Prepare the board with pegs
 for (i = 0; i < boardSize; ++i) {
   for (j = 0; j < boardSize; ++j) {
     // Skip center of the board
     if (i == Math.floor(boardSize / 2) && j == Math.floor(boardSize / 2)) {
-      var whitePeg = document.createElement("span");
-      whitePeg.className = "whitePeg";
-      document.getElementById("" + i + j).appendChild(whitePeg);
-      continue;
-    }
-
-    // Add player piece
-    if (i == playerPosition[0] && j == playerPosition[1]) {
-      var player = document.createElement("span");
-      player.className = "player";
-      document.getElementById("" + i + j).appendChild(player);
       continue;
     }
 
     var peg = document.createElement("span");
     peg.className = "peg";
+    peg.textContent = "" + i + j;
     document.getElementById("" + i + j).appendChild(peg);
   }
 }
 
 // Function to return valid Moves
 // Uses the current player position and returns a list of cells to which player can move
-var GetValidMoves = () => {
+var GetValidMoves = (playerPosition) => {
   console.log("Checking Valid Moves for : ", playerPosition);
   let moveUp = [-2, 0];
   let moveDown = [2, 0];
@@ -63,7 +53,7 @@ var GetValidMoves = () => {
   tempMoves.push(playerUp, playerDown, playerLeft, playerRight);
 
   tempMoves.forEach((move) => {
-    if (InsideBoard(move) && Exists(move)) {
+    if (InsideBoard(move)) {
       validMoves.push(move);
     }
   });
@@ -74,18 +64,17 @@ var GetValidMoves = () => {
 
 // Function to perform Move
 // Takes a cell to be moved to and moves the player
-var MovePeg = (position) => {
-  GetValidMoves().forEach((move) => {
-    if (move[0] === position[0] && move[1] === position[1]) {
-      RemovePeg(position);
-      RemovePeg(playerPosition);
-      RemovePeg(FindBetweenPeg(playerPosition, position));
-      var player = document.createElement("span");
-      player.className = "player";
-      document
-        .getElementById("" + position[0] + position[1])
-        .appendChild(player);
-      playerPosition = position;
+var MovePeg = (startPos, endPos) => {
+  GetValidMoves(startPos).forEach((move) => {
+    if (move[0] === endPos[0] && move[1] === endPos[1]) {
+      console.log("Moving To : ", endPos);
+      RemovePeg(endPos);
+      RemovePeg(startPos);
+      RemovePeg(FindBetweenPeg(startPos, endPos));
+      var peg = document.createElement("span");
+      peg.className = "peg";
+      peg.textContent = "" + endPos[0] + endPos[1];
+      document.getElementById("" + endPos[0] + endPos[1]).appendChild(peg);
     }
   });
 };
@@ -109,31 +98,33 @@ var InsideBoard = (position) => {
 };
 
 // Util Function to check if peg exists on position
-var Exists = (position) => {
-  if (
-    position[0] < 0 ||
-    position[0] > 6 ||
-    position[1] < 0 ||
-    position[1] > 6
-  ) {
-    return false;
-  }
-  if (
-    document.getElementById("" + position[0] + position[1]).hasChildNodes() &&
-    window.getComputedStyle(
-      document.getElementById("" + position[0] + position[1]),
-      null
-    ).display === "flex"
-  ) {
-    return true;
-  }
-  return false;
-};
+// var Exists = (position) => {
+//   if (
+//     position[0] < 0 ||
+//     position[0] > 6 ||
+//     position[1] < 0 ||
+//     position[1] > 6
+//   ) {
+//     return false;
+//   }
+//   if (
+//     document.getElementById("" + position[0] + position[1]).hasChildNodes() &&
+//     window.getComputedStyle(
+//       document.getElementById("" + position[0] + position[1]),
+//       null
+//     ).display === "flex"
+//   ) {
+//     return true;
+//   }
+//   return false;
+// };
 
 // Util Function to remove peg
 var RemovePeg = (position) => {
   let peg = document.getElementById("" + position[0] + position[1]);
-  peg.removeChild(peg.firstChild);
+  if (peg.firstChild) {
+    peg.removeChild(peg.firstChild);
+  }
 };
 
 // Util Function to find pegs between given two pegs while making a move
@@ -149,3 +140,6 @@ var FindBetweenPeg = (startingPos, EndPos) => {
     return [startingPos[0] - 1, startingPos[1]];
   }
 };
+
+// Util Function to prepare controls
+var SetupControls = () => {};
