@@ -3,38 +3,44 @@ var buttonContainer = document.getElementById("buttonContainerID");
 var i, j, k, playerPosition;
 var boardSize = 7;
 var nMoves = 0;
-var lifeTime = 100;
+var lifeTime = 1000;
+
+var nExperiments = 250;
+var avgMoves = 0;
+var avgPegsRemaining = 0;
 
 // Create the board
-for (i = 0; i < boardSize; ++i) {
-  var row = document.createElement("div");
-  row.setAttribute("id", "rowID");
-  row.className = "row";
+var InitializeBoard = () => {
+  for (i = 0; i < boardSize; ++i) {
+    var row = document.createElement("div");
+    row.setAttribute("id", "rowID");
+    row.className = "row";
 
-  for (j = 0; j < boardSize; ++j) {
-    var cell = document.createElement("div");
-    cell.setAttribute("id", "" + i + j);
-    cell.className = "cell";
-    row.appendChild(cell);
-  }
-
-  board.appendChild(row);
-}
-
-// Prepare the board with pegs
-for (i = 0; i < boardSize; ++i) {
-  for (j = 0; j < boardSize; ++j) {
-    // Skip center of the board
-    if (i == Math.floor(boardSize / 2) && j == Math.floor(boardSize / 2)) {
-      continue;
+    for (j = 0; j < boardSize; ++j) {
+      var cell = document.createElement("div");
+      cell.setAttribute("id", "" + i + j);
+      cell.className = "cell";
+      row.appendChild(cell);
     }
 
-    var peg = document.createElement("span");
-    peg.className = "peg";
-    peg.textContent = "" + i + j;
-    document.getElementById("" + i + j).appendChild(peg);
+    board.appendChild(row);
   }
-}
+
+  // Prepare the board with pegs
+  for (i = 0; i < boardSize; ++i) {
+    for (j = 0; j < boardSize; ++j) {
+      // Skip center of the board
+      if (i == Math.floor(boardSize / 2) && j == Math.floor(boardSize / 2)) {
+        continue;
+      }
+
+      var peg = document.createElement("span");
+      peg.className = "peg";
+      // peg.textContent = "" + i + j;
+      document.getElementById("" + i + j).appendChild(peg);
+    }
+  }
+};
 
 // Function to return valid Moves
 // Uses the current player position and returns a list of cells to which player can move
@@ -69,13 +75,13 @@ var MovePeg = (startPos, endPos) => {
   let movePerformed = false;
   GetValidMoves(startPos).forEach((move) => {
     if (move[0] === endPos[0] && move[1] === endPos[1]) {
-      console.log("Moving ", startPos, " to ", endPos);
+      //   console.log("Moving ", startPos, " to ", endPos);
       RemovePeg(endPos);
       RemovePeg(startPos);
       RemovePeg(FindBetweenPeg(startPos, endPos));
       var peg = document.createElement("span");
       peg.className = "peg";
-      peg.textContent = "" + endPos[0] + endPos[1];
+      //   peg.textContent = "" + endPos[0] + endPos[1];
       document.getElementById("" + endPos[0] + endPos[1]).appendChild(peg);
       movePerformed = true;
       nMoves++;
@@ -154,12 +160,14 @@ var MoveablePegs = () => {
   return moveablePegs;
 };
 
-// Util Function to find all possible moves
+// Util Function to find all possible moves which remove a peg (Greedy)
 var AllowedMoves = () => {
   let allowedMoves = [];
   MoveablePegs().forEach((startPos) => {
     GetValidMoves(startPos).forEach((endPos) => {
-      allowedMoves.push([startPos, endPos]);
+      if (!IsEmpty(FindBetweenPeg(startPos, endPos))) {
+        allowedMoves.push([startPos, endPos]);
+      }
     });
   });
   return allowedMoves;
@@ -190,23 +198,40 @@ var EmptyPegs = () => {
 // Util Function to setup stats
 var UpdateStats = () => {
   buttonContainer.textContent =
-    "" + nMoves + " move(s) done" + " Pegs Remaining : " + (33 - EmptyPegs());
-  //   console.log(
-  //     "Move ",
-  //     nMoves,
-  //     " No. of Allowed Moves : ",
-  //     AllowedMoves().length
-  //   );
+    "" + nMoves + " move(s) done ," + " Pegs Remaining : " + (33 - EmptyPegs());
+};
+
+// Util Function to Reset Board
+var ResetBoard = () => {
+  nMoves = 0;
+  board.replaceChildren();
+  InitializeBoard();
 };
 
 // Game Lifecycle
 var RunGame = () => {
   for (k = 0; k <= lifeTime; k++) {
+    if (!AllowedMoves().length) {
+      break;
+    }
     RandomMove();
   }
-  //   while (MoveablePegs().length >= 4) {
-  //     RandomMove();
-  //   }
 };
 
-RunGame();
+// Run Experiment
+var RunExperiment = () => {
+  InitializeBoard();
+  for (let k = 0; k < nExperiments; ++k) {
+    ResetBoard();
+    RunGame();
+    avgMoves += nMoves;
+    avgPegsRemaining += 33 - EmptyPegs();
+  }
+  console.log("Report");
+  console.log("Strategy : Greedy with Random Moves");
+  console.log("Number of Experiments : ", nExperiments);
+  console.log("Average Moves per experiment", avgMoves / nExperiments);
+  console.log("Average No of Pegs remaining", avgPegsRemaining / nExperiments);
+};
+
+RunExperiment();
