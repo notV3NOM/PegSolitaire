@@ -21,6 +21,15 @@
   justify-content: center;
 }
 
+.allowedCell {
+  width: 30px;
+  height: 30px;
+  border: 3px solid;
+  padding: 10px;
+  background-color: gray;
+  cursor: pointer;
+}
+
 .peg {
   height: 25px;
   width: 25px;
@@ -50,10 +59,20 @@
   display: inline-block;
 }
 
-.whitePeg {
+.moveablePeg {
   height: 25px;
   width: 25px;
-  background-color: gray;
+  background-color: yellow;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid;
+  cursor: pointer;
+}
+
+.selectedPeg {
+  height: 25px;
+  width: 25px;
+  background-color: red;
   border-radius: 50%;
   display: inline-block;
 }
@@ -77,14 +96,16 @@
 }
 
 .row:nth-child(2n) {
-  .cell {
+  .cell,
+  .allowedCell {
     border-top: none;
     border-bottom: none;
   }
 }
 
 .row:nth-child(n) {
-  .cell:nth-child(2n) {
+  .cell:nth-child(2n),
+  .allowedCell:nth-child(2n) {
     border-left: none;
     border-right: none;
   }

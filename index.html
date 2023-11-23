@@ -28,11 +28,16 @@
       readonly
     ></textarea>
     <div class="buttonContainer">
-      <button onclick="RunExperiment(1);" class="button-39" role="button">
-        Start 1
+      <button
+        onclick="ResetBoard();
+        ManualMode();"
+        class="button-39"
+        role="button"
+      >
+        Start Manual Mode
       </button>
-      <button onclick="RunExperiment(10);" class="button-39" role="button">
-        Start 10
+      <button onclick="RunExperiment(1);" class="button-39" role="button">
+        Start Random Agent
       </button>
       <button
         onclick="window.location.reload();"
