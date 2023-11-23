@@ -46,6 +46,7 @@ var InitializeBoard = () => {
 // Uses the current player position and returns a list of cells to which player can move
 var GetValidMoves = (playerPosition) => {
   if (!InsideBoard(playerPosition)) return [];
+  if (IsEmpty(playerPosition)) return [];
   let moveUp = [-2, 0];
   let moveDown = [2, 0];
   let moveLeft = [0, -2];
@@ -75,7 +76,7 @@ var MovePeg = (startPos, endPos) => {
   let movePerformed = false;
   GetValidMoves(startPos).forEach((move) => {
     if (move[0] === endPos[0] && move[1] === endPos[1]) {
-      //   console.log("Moving ", startPos, " to ", endPos);
+      // console.log("Moving from ", startPos, endPos);
       RemovePeg(endPos);
       RemovePeg(startPos);
       RemovePeg(FindBetweenPeg(startPos, endPos));
@@ -236,6 +237,8 @@ var RunGame = async () => {
 // Run Experiment
 var RunExperiment = async (days) => {
   nExperiments = days;
+  avgMoves = 0;
+  avgPegsRemaining = 0;
   ResetBoard();
   for (let k = 0; k < nExperiments; ++k) {
     ResetBoard();
