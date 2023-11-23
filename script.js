@@ -226,6 +226,20 @@ var EmptyPegs = () => {
   return count;
 };
 
+// Util Function to clear all cells
+var ClearCells = () => {
+  for (let i = 0; i < boardSize; ++i) {
+    for (let j = 0; j < boardSize; ++j) {
+      document.getElementById("" + i + j).className = "cell";
+    }
+  }
+};
+
+// Util Function to clear all event listeners
+var ClearListeners = () => {
+  board.innerHTML = board.innerHTML;
+};
+
 // Util Function to setup stats
 var UpdateStats = () => {
   textContainer.textContent = `
@@ -290,55 +304,60 @@ var userMoves = 0;
 
 // Function to play in manual mode
 var ManualMode = () => {
+  ResetBoard();
   PrepareSourceInput();
 };
 
 // Util function to add source event listener
 var PrepareSourceInput = () => {
-  let abortSourceControllers = new AbortController();
+  ClearListeners();
+  const abortSourceControllers = new AbortController();
+  let len = AllowedMoves().length;
 
-  textContainer.textContent = AllowedMoves().length
-    ? `
-  ${userMoves} moves done
-  ${AllowedMoves().length} legal moves can be performed in this state 
-  `
-    : `
-  Finished
-  ${userMoves} move(s) done , Pegs Remaining :  ${33 - EmptyPegs()}
-  `;
-
-  MoveablePegsActual().forEach((peg) => {
-    document.getElementById("" + peg[0] + peg[1]).firstChild.className =
-      "moveablePeg";
-    document.getElementById("" + peg[0] + peg[1]).addEventListener(
-      "click",
-      function () {
-        document.getElementById("" + peg[0] + peg[1]).firstChild.className =
-          "selectedPeg";
-        sourcePeg = [peg[0], peg[1]];
-        MoveablePegsActual().forEach((remainingPeg) => {
-          if (!Equal(peg, remainingPeg)) {
-            document.getElementById(
-              "" + remainingPeg[0] + remainingPeg[1]
-            ).firstChild.className = "peg";
-          }
+  if (len) {
+    textContainer.textContent = `
+      ${userMoves} moves done
+      ${AllowedMoves().length} legal moves can be performed in this state 
+    `;
+    MoveablePegsActual().forEach((peg) => {
+      document.getElementById("" + peg[0] + peg[1]).firstChild.className =
+        "moveablePeg";
+      document
+        .getElementById("" + peg[0] + peg[1])
+        .addEventListener("click", function () {
+          document.getElementById("" + peg[0] + peg[1]).firstChild.className =
+            "selectedPeg";
+          sourcePeg = [peg[0], peg[1]];
+          MoveablePegsActual().forEach((remainingPeg) => {
+            if (!Equal(peg, remainingPeg)) {
+              document.getElementById(
+                "" + remainingPeg[0] + remainingPeg[1]
+              ).firstChild.className = "peg";
+            }
+          });
+          abortSourceControllers.abort();
+          PrepareDestinationInput();
         });
-        abortSourceControllers.abort();
-        PrepareDestinationInput();
-      },
-      { signal: abortSourceControllers.signal }
-    );
-  });
+    });
+  } else {
+    textContainer.textContent = ` 
+    Finished
+    ${userMoves} move(s) done , Pegs Remaining :  ${33 - EmptyPegs()}
+    `;
+  }
 };
 
 // Util function to add destination event listener
 var PrepareDestinationInput = () => {
-  let abortDestinationControllers = new AbortController();
+  ClearListeners();
+  const abortDestinationControllers = new AbortController();
 
   let allowedMoves = AllowedMoves();
   let allowedDestinations = new Set();
   allowedMoves.forEach(([source, destination]) => {
-    allowedDestinations.add("" + destination[0] + destination[1]);
+    if (Equal(sourcePeg, source)) {
+      allowedDestinations.add("" + destination[0] + destination[1]);
+    }
   });
   allowedDestinations.forEach((destination) => {
     document
@@ -354,6 +373,7 @@ var PrepareDestinationInput = () => {
               Number(destination[1]),
             ])
           );
+          ClearCells();
           var peg = document.createElement("span");
           peg.className = "movedPeg";
           document
@@ -367,5 +387,14 @@ var PrepareDestinationInput = () => {
           signal: abortDestinationControllers.signal,
         }
       );
+    document.getElementById("" + destination[0] + destination[1]).className =
+      "allowedCell";
   });
+  document
+    .getElementById("" + sourcePeg[0] + sourcePeg[1])
+    .addEventListener("click", function () {
+      ClearCells();
+      abortDestinationControllers.abort();
+      PrepareSourceInput();
+    });
 };
