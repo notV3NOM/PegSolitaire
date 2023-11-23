@@ -4,7 +4,7 @@ var i, j, k, playerPosition;
 var boardSize = 7;
 var nMoves = 0;
 var lifeTime = 1000;
-
+var sleepTime = 100;
 var nExperiments = 1;
 var avgMoves = 0;
 var avgPegsRemaining = 0;
@@ -197,7 +197,6 @@ var EmptyPegs = () => {
 
 // Util Function to setup stats
 var UpdateStats = () => {
-  console.log("Update Stats");
   textContainer.textContent = `
   ${nMoves} move(s) done , Pegs Remaining :  ${33 - EmptyPegs()}
   `;
@@ -205,7 +204,6 @@ var UpdateStats = () => {
 
 // Util Function to add report
 var UpdateReport = () => {
-  console.log("Update Report");
   textContainer.textContent = `
   Report
   Strategy : Greedy with Random Moves
@@ -231,7 +229,7 @@ var RunGame = async () => {
       break;
     }
     RandomMove();
-    await sleep(100);
+    await sleep(sleepTime);
   }
 };
 
