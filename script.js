@@ -1,11 +1,11 @@
 var board = document.getElementById("boardContainerID");
-var buttonContainer = document.getElementById("buttonContainerID");
+var textContainer = document.getElementById("textContainerID");
 var i, j, k, playerPosition;
 var boardSize = 7;
 var nMoves = 0;
 var lifeTime = 1000;
 
-var nExperiments = 250;
+var nExperiments = 1;
 var avgMoves = 0;
 var avgPegsRemaining = 0;
 
@@ -197,9 +197,25 @@ var EmptyPegs = () => {
 
 // Util Function to setup stats
 var UpdateStats = () => {
-  buttonContainer.textContent =
-    "" + nMoves + " move(s) done ," + " Pegs Remaining : " + (33 - EmptyPegs());
+  console.log("Update Stats");
+  textContainer.textContent = `
+  ${nMoves} move(s) done , Pegs Remaining :  ${33 - EmptyPegs()}
+  `;
 };
+
+// Util Function to add report
+var UpdateReport = () => {
+  console.log("Update Report");
+  textContainer.textContent = `
+  Report
+  Strategy : Greedy with Random Moves
+  Number of Experiments : ${nExperiments}
+  Average Moves per experiment : ${avgMoves / nExperiments}
+  Average No of Pegs remaining : ${avgPegsRemaining / nExperiments}
+  `;
+};
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Util Function to Reset Board
 var ResetBoard = () => {
@@ -209,29 +225,27 @@ var ResetBoard = () => {
 };
 
 // Game Lifecycle
-var RunGame = () => {
+var RunGame = async () => {
   for (k = 0; k <= lifeTime; k++) {
     if (!AllowedMoves().length) {
       break;
     }
     RandomMove();
+    await sleep(100);
   }
 };
 
 // Run Experiment
-var RunExperiment = () => {
-  InitializeBoard();
+var RunExperiment = async (days) => {
+  nExperiments = days;
+  ResetBoard();
   for (let k = 0; k < nExperiments; ++k) {
     ResetBoard();
-    RunGame();
+    await RunGame();
     avgMoves += nMoves;
     avgPegsRemaining += 33 - EmptyPegs();
   }
-  console.log("Report");
-  console.log("Strategy : Greedy with Random Moves");
-  console.log("Number of Experiments : ", nExperiments);
-  console.log("Average Moves per experiment", avgMoves / nExperiments);
-  console.log("Average No of Pegs remaining", avgPegsRemaining / nExperiments);
+  UpdateReport();
 };
 
-RunExperiment();
+InitializeBoard();
