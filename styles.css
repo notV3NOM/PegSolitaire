@@ -33,7 +33,7 @@
 
 @keyframes pegMovedAnimation {
   0% {
-    background-color: green;
+    background-color: yellow;
   }
   100% {
     background-color: rgb(99, 187, 216);

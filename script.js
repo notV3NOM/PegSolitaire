@@ -225,7 +225,7 @@ var ResetBoard = () => {
 
 // Game Lifecycle
 var RunGame = async () => {
-  for (k = 0; k <= lifeTime; k++) {
+  for (k = 0; k < lifeTime; k++) {
     if (!AllowedMoves().length) {
       break;
     }
