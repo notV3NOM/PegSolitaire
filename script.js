@@ -237,6 +237,8 @@ var RunGame = async () => {
 // Run Experiment
 var RunExperiment = async (days) => {
   nExperiments = days;
+  avgMoves = 0;
+  avgPegsRemaining = 0;
   ResetBoard();
   for (let k = 0; k < nExperiments; ++k) {
     ResetBoard();
