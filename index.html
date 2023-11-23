@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
   </head>
-  <body>
+  <body class="dark-mode">
     <div class="header">Peg Solitaire</div>
     <div class="boardContainer" id="boardContainerID"></div>
     <textarea
@@ -19,6 +19,7 @@
       id="textContainerID"
       rows="7"
       cols="60"
+      readonly
     ></textarea>
     <div class="buttonContainer">
       <button onclick="RunExperiment(1);" class="button-39" role="button">
@@ -27,9 +28,16 @@
       <button onclick="RunExperiment(10);" class="button-39" role="button">
         Start 10
       </button>
-      <!-- <button onclick="RunExperiment(100);" class="button-39" role="button">
-        Start 100
-      </button> -->
+      <button onclick="ResetBoard();" class="button-39" role="button">
+        Reset
+      </button>
+      <button
+        onclick="document.body.classList.toggle('dark-mode');"
+        class="button-39"
+        role="button"
+      >
+        Switch Theme
+      </button>
     </div>
   </body>
 </html>

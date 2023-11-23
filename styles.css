@@ -143,3 +143,23 @@
 .button-39:focus-visible {
   box-shadow: none;
 }
+
+.dark-mode {
+  background-color: black;
+  color: white;
+
+  .textContainer {
+    background-color: black;
+    color: white;
+  }
+
+  .button-39 {
+    background-color: #000000;
+    color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(49, 49, 49, 0.05);
+  }
+
+  .button-39:hover {
+    background-color: rgb(28, 28, 28);
+  }
+}
