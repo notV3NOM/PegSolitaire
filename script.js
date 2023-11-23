@@ -81,7 +81,7 @@ var MovePeg = (startPos, endPos) => {
       RemovePeg(startPos);
       RemovePeg(FindBetweenPeg(startPos, endPos));
       var peg = document.createElement("span");
-      peg.className = "peg";
+      peg.className = "movedPeg";
       //   peg.textContent = "" + endPos[0] + endPos[1];
       document.getElementById("" + endPos[0] + endPos[1]).appendChild(peg);
       movePerformed = true;
@@ -250,3 +250,7 @@ var RunExperiment = async (days) => {
 };
 
 InitializeBoard();
+textContainer.textContent = `
+  Welcome to Peg Solitaire !
+  Click on the buttons below to get started
+`;

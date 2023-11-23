@@ -31,10 +31,21 @@
   justify-content: center;
 }
 
-.player {
+@keyframes pegMovedAnimation {
+  0% {
+    background-color: green;
+  }
+  100% {
+    background-color: rgb(99, 187, 216);
+  }
+}
+
+.movedPeg {
+  animation-name: pegMovedAnimation;
+  animation-duration: 0.5s;
   height: 25px;
   width: 25px;
-  background-color: green;
+  background-color: rgb(99, 187, 216);
   border-radius: 50%;
   display: inline-block;
 }
