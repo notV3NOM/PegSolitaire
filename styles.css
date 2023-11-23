@@ -50,10 +50,18 @@
   display: inline-block;
 }
 
-.whitePeg {
+.moveablePeg {
   height: 25px;
   width: 25px;
-  background-color: gray;
+  background-color: yellow;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.selectedPeg {
+  height: 25px;
+  width: 25px;
+  background-color: red;
   border-radius: 50%;
   display: inline-block;
 }

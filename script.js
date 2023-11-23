@@ -97,6 +97,14 @@ var Add = (a, b) => {
   return [a[0] + b[0], a[1] + b[1]];
 };
 
+// Util Function to check "equal"
+var Equal = (a, b) => {
+  if (a[0] == b[0] && a[1] == b[1]) {
+    return true;
+  }
+  return false;
+};
+
 // Util Function to check if position is inside board
 var InsideBoard = (position) => {
   if (
@@ -149,6 +157,20 @@ var FindBetweenPeg = (startingPos, EndPos) => {
 };
 
 // Util Function to find all pegs that can be moved
+var MoveablePegsActual = () => {
+  let moveablePegs = new Set();
+  let allowedMoves = AllowedMoves();
+  let moveablePegsList = [];
+
+  allowedMoves.forEach(([source, destination]) => {
+    moveablePegs.add("" + source[0] + source[1]);
+  });
+  moveablePegs.forEach((move) => {
+    moveablePegsList.push([Number(move[0]), Number(move[1])]);
+  });
+  return moveablePegsList;
+};
+
 var MoveablePegs = () => {
   let moveablePegs = [];
   for (let i = 0; i < boardSize; ++i) {
@@ -161,7 +183,7 @@ var MoveablePegs = () => {
   return moveablePegs;
 };
 
-// Util Function to find all possible moves which remove a peg (Greedy)
+// Util Function to find all possible moves which remove a peg
 var AllowedMoves = () => {
   let allowedMoves = [];
   MoveablePegs().forEach((startPos) => {
@@ -178,12 +200,20 @@ var AllowedMoves = () => {
 var RandomMove = () => {
   let allowedMoves = AllowedMoves();
   if (!allowedMoves.length) return;
-  const randomElement =
+  let randomElement =
     allowedMoves[Math.floor(Math.random() * allowedMoves.length)];
   MovePeg(randomElement[0], randomElement[1]);
 };
 
-// Util Functin to count empty Pegs
+// Util Function to perform move using given heuristic
+var IntelligentMove = (heuristic) => {
+  let allowedMoves = AllowedMoves();
+  if (!allowedMoves.length) return;
+  let move = heuristic(allowedMoves);
+  MovePeg(move[0], move[1]);
+};
+
+// Util Function to count empty Pegs
 var EmptyPegs = () => {
   let count = 0;
   for (let i = 0; i < boardSize; ++i) {
@@ -254,3 +284,88 @@ textContainer.textContent = `
   Welcome to Peg Solitaire !
   Click on the buttons below to get started
 `;
+
+var sourcePeg = [-1, -1];
+var userMoves = 0;
+
+// Function to play in manual mode
+var ManualMode = () => {
+  PrepareSourceInput();
+};
+
+// Util function to add source event listener
+var PrepareSourceInput = () => {
+  let abortSourceControllers = new AbortController();
+
+  textContainer.textContent = AllowedMoves().length
+    ? `
+  ${userMoves} moves done
+  ${AllowedMoves().length} legal moves can be performed in this state 
+  `
+    : `
+  Finished
+  ${userMoves} move(s) done , Pegs Remaining :  ${33 - EmptyPegs()}
+  `;
+
+  MoveablePegsActual().forEach((peg) => {
+    document.getElementById("" + peg[0] + peg[1]).firstChild.className =
+      "moveablePeg";
+    document.getElementById("" + peg[0] + peg[1]).addEventListener(
+      "click",
+      function () {
+        document.getElementById("" + peg[0] + peg[1]).firstChild.className =
+          "selectedPeg";
+        sourcePeg = [peg[0], peg[1]];
+        MoveablePegsActual().forEach((remainingPeg) => {
+          if (!Equal(peg, remainingPeg)) {
+            document.getElementById(
+              "" + remainingPeg[0] + remainingPeg[1]
+            ).firstChild.className = "peg";
+          }
+        });
+        abortSourceControllers.abort();
+        PrepareDestinationInput();
+      },
+      { signal: abortSourceControllers.signal }
+    );
+  });
+};
+
+// Util function to add destination event listener
+var PrepareDestinationInput = () => {
+  let abortDestinationControllers = new AbortController();
+
+  let allowedMoves = AllowedMoves();
+  let allowedDestinations = new Set();
+  allowedMoves.forEach(([source, destination]) => {
+    allowedDestinations.add("" + destination[0] + destination[1]);
+  });
+  allowedDestinations.forEach((destination) => {
+    document
+      .getElementById("" + destination[0] + destination[1])
+      .addEventListener(
+        "click",
+        function () {
+          RemovePeg(sourcePeg);
+          RemovePeg([Number(destination[0]), Number(destination[1])]);
+          RemovePeg(
+            FindBetweenPeg(sourcePeg, [
+              Number(destination[0]),
+              Number(destination[1]),
+            ])
+          );
+          var peg = document.createElement("span");
+          peg.className = "movedPeg";
+          document
+            .getElementById("" + destination[0] + destination[1])
+            .appendChild(peg);
+          userMoves++;
+          abortDestinationControllers.abort();
+          PrepareSourceInput();
+        },
+        {
+          signal: abortDestinationControllers.signal,
+        }
+      );
+  });
+};
