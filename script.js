@@ -243,7 +243,8 @@ var ClearListeners = () => {
 // Util Function to setup stats
 var UpdateStats = () => {
   textContainer.textContent = `
-  ${nMoves} move(s) done , Pegs Remaining :  ${33 - EmptyPegs()}
+  ${nMoves} move(s) done 
+  Pegs Remaining :  ${33 - EmptyPegs()}
   `;
 };
 
@@ -317,7 +318,7 @@ var PrepareSourceInput = () => {
   if (len) {
     textContainer.textContent = `
       ${userMoves} moves done
-      ${AllowedMoves().length} legal moves can be performed in this state 
+      ${AllowedMoves().length} legal moves can be performed 
     `;
     MoveablePegsActual().forEach((peg) => {
       document.getElementById("" + peg[0] + peg[1]).firstChild.className =
@@ -342,7 +343,8 @@ var PrepareSourceInput = () => {
   } else {
     textContainer.textContent = ` 
     Finished
-    ${userMoves} move(s) done , Pegs Remaining :  ${33 - EmptyPegs()}
+    ${userMoves} move(s) done
+    Pegs Remaining :  ${33 - EmptyPegs()}
     `;
   }
 };
