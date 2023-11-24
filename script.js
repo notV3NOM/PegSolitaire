@@ -445,7 +445,7 @@ InitThemeSwitch();
 InitializeBoard();
 textContainer.textContent = `
   Welcome to Peg Solitaire ! \n
-  Click on the buttons below to get started
+  Click on the buttons below to start
 `;
 boardHistory.push(startingState);
 
@@ -574,7 +574,7 @@ var FullReset = () => {
     ResetBoard();
     textContainer.textContent = `
   Welcome to Peg Solitaire ! \n
-  Click on the buttons below to get started
+  Click on the buttons below to start
     `;
     document.getElementById("status").textContent = "Idle";
     boardHistory = [];

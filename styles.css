@@ -39,7 +39,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 60px;
+  margin-top: 50px;
   min-height: 370px;
   margin-left: auto;
   margin-right: auto;
@@ -154,7 +154,7 @@ body {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 60px;
+  margin-top: 50px;
   overflow: hidden;
   resize: none;
   text-align: justify;
@@ -204,7 +204,7 @@ body {
 }
 
 .buttonContainer {
-  margin-top: 60px;
+  margin-top: 50px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -228,6 +228,11 @@ body {
 a {
   color: inherit;
   text-decoration: inherit;
+}
+
+.sourceLink {
+  /* align-items: center; */
+  text-align: center;
 }
 
 /*Button CSS */
@@ -404,6 +409,12 @@ a {
 
   ~ .toggle-switch .toggle-switch-figureAlt {
     transform: scale(1);
+  }
+}
+
+@media (max-width: 500px) {
+  .toggle {
+    top: 100px;
   }
 }
 
