@@ -291,6 +291,8 @@ var RunGame = async () => {
 
 // Run Experiment
 var RunExperiment = async (days) => {
+  if (document.getElementById("status").textContent === "Random Agent running")
+    return;
   document.getElementById("status").textContent = "Random Agent running";
   nExperiments = days;
   avgMoves = 0;
@@ -495,7 +497,13 @@ var FullReset = () => {
     document.getElementById("status").textContent === "Idle" ||
     document.getElementById("status").textContent === "Manual Mode"
   ) {
+    sourcePeg = [-1, -1];
+    userMoves = 0;
     ResetBoard();
+    textContainer.textContent = `
+  Welcome to Peg Solitaire !
+  Click on the buttons below to get started
+    `;
     document.getElementById("status").textContent = "Idle";
   } else {
     window.location.reload();
