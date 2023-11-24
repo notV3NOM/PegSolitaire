@@ -256,7 +256,7 @@ var ClearListeners = () => {
 // Util Function to setup stats
 var UpdateStats = () => {
   textContainer.textContent = `
-  ${nMoves} move(s) done 
+  ${nMoves} move(s) done \n
   Pegs Remaining :  ${33 - EmptyPegs()}
   `;
 };
@@ -444,7 +444,7 @@ var UndoMove = () => {
 InitThemeSwitch();
 InitializeBoard();
 textContainer.textContent = `
-  Welcome to Peg Solitaire !
+  Welcome to Peg Solitaire ! \n
   Click on the buttons below to get started
 `;
 boardHistory.push(startingState);
@@ -500,7 +500,7 @@ var PrepareSourceInput = () => {
     } else {
       textContainer.textContent = ` 
       Finished
-      ${userMoves} move(s) done
+      ${userMoves} move(s) done \n
       Pegs Remaining :  ${33 - EmptyPegs()}
       `;
     }
@@ -573,7 +573,7 @@ var FullReset = () => {
     userMoves = 0;
     ResetBoard();
     textContainer.textContent = `
-  Welcome to Peg Solitaire !
+  Welcome to Peg Solitaire ! \n
   Click on the buttons below to get started
     `;
     document.getElementById("status").textContent = "Idle";
