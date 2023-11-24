@@ -431,6 +431,16 @@ var SetBoardState = (state) => {
   }
 };
 
+// Function to Undo move
+var UndoMove = () => {
+  if (boardHistory.length > 1) {
+    SetBoardState(boardHistory.at(-2));
+    boardHistory.pop();
+    userMoves--;
+    PrepareSourceInput();
+  }
+};
+
 InitThemeSwitch();
 InitializeBoard();
 textContainer.textContent = `
@@ -494,7 +504,6 @@ var PrepareSourceInput = () => {
       `;
     }
     document.getElementById("status").textContent = "Idle";
-    console.log("History", boardHistory);
     boardHistory = [];
     boardHistory.push(startingState);
   }
