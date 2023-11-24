@@ -496,6 +496,7 @@ var PrepareSourceInput = () => {
     Completed Successfully !
     ${userMoves} move(s) done
     `;
+      document.getElementById("celebrations").style.display = "";
     } else {
       textContainer.textContent = ` 
       Finished
