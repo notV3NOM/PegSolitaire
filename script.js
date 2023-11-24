@@ -9,6 +9,7 @@ var nExperiments = 1;
 var avgMoves = 0;
 var avgPegsRemaining = 0;
 var starsId = "starsCSS";
+var wavesId = "wavesCSS";
 
 // Create the board
 var InitializeBoard = () => {
@@ -315,12 +316,7 @@ var InitThemeSwitch = () => {
     : "light";
   document.body.className = theme === "dark" ? "dark-mode" : "";
   localStorage.setItem("theme", theme);
-
-  if (theme === "dark") {
-    LoadStars();
-  } else {
-    RemoveStars();
-  }
+  HandleThemeCSSLoading(theme);
 
   const toggle = document.getElementById("toggleInputID");
   toggle.checked = theme === "dark" ? true : false;
@@ -328,11 +324,7 @@ var InitThemeSwitch = () => {
     const theme = e.target.checked ? "dark" : "light";
     document.body.className = theme === "dark" ? "dark-mode" : "";
     localStorage.setItem("theme", theme);
-    if (theme === "dark") {
-      LoadStars();
-    } else {
-      RemoveStars();
-    }
+    HandleThemeCSSLoading(theme);
   });
 };
 
@@ -353,6 +345,36 @@ var LoadStars = () => {
 // Function to remove stars CSS
 var RemoveStars = () => {
   document.getElementById(starsId)?.remove();
+};
+
+// Function to load waves CSS
+var LoadWaves = () => {
+  if (!document.getElementById(wavesId)) {
+    var head = document.getElementsByTagName("head")[0];
+    var link = document.createElement("link");
+    link.id = wavesId;
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = "waves.css";
+    link.media = "all";
+    head.appendChild(link);
+  }
+};
+
+// Function to remove waves CSS
+var RemoveWaves = () => {
+  document.getElementById(wavesId)?.remove();
+};
+
+// Util function to handle theme switch
+var HandleThemeCSSLoading = (theme) => {
+  if (theme === "dark") {
+    RemoveWaves();
+    LoadStars();
+  } else {
+    RemoveStars();
+    LoadWaves();
+  }
 };
 
 InitThemeSwitch();
