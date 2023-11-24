@@ -8,5 +8,7 @@ TODO
 - Add other related videos, publications
 - New / Random Theme colors
 - Played x times till now , statistics , cloudflare function
-- console (ctrl shift p)
 - Background effects
+- console (ctrl shift p)
+- text box improvements
+- status on topbar
