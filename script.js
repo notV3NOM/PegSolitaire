@@ -10,6 +10,9 @@ var avgMoves = 0;
 var avgPegsRemaining = 0;
 var starsId = "starsCSS";
 var wavesId = "wavesCSS";
+var boardHistory = [];
+var boardState = "";
+const startingState = "111111111111111101111111111111111";
 
 // Create the board
 var InitializeBoard = () => {
@@ -381,12 +384,60 @@ var HandleThemeCSSLoading = (theme) => {
   }
 };
 
+// Util Function to calculate boardState
+var GetBoardState = () => {
+  let state = "";
+  for (let i = 0; i < boardSize; ++i) {
+    for (let j = 0; j < boardSize; ++j) {
+      if (InsideBoard([i, j])) {
+        state += IsEmpty([i, j]) ? "0" : "1";
+      }
+    }
+  }
+  return state;
+};
+
+// Util Function to set boardState
+var SetBoardState = (state) => {
+  board.replaceChildren();
+
+  for (i = 0; i < boardSize; ++i) {
+    var row = document.createElement("div");
+    row.setAttribute("id", "rowID");
+    row.className = "row";
+
+    for (j = 0; j < boardSize; ++j) {
+      var cell = document.createElement("div");
+      cell.setAttribute("id", "" + i + j);
+      cell.className = "cell";
+      row.appendChild(cell);
+    }
+
+    board.appendChild(row);
+  }
+
+  let counter = 0;
+  for (let i = 0; i < boardSize; ++i) {
+    for (let j = 0; j < boardSize; ++j) {
+      if (InsideBoard([i, j])) {
+        if (state[counter] == "1") {
+          var peg = document.createElement("span");
+          peg.className = "peg";
+          document.getElementById("" + i + j).appendChild(peg);
+        }
+        counter++;
+      }
+    }
+  }
+};
+
 InitThemeSwitch();
 InitializeBoard();
 textContainer.textContent = `
   Welcome to Peg Solitaire !
   Click on the buttons below to get started
 `;
+boardHistory.push(startingState);
 
 var sourcePeg = [-1, -1];
 var userMoves = 0;
@@ -430,12 +481,22 @@ var PrepareSourceInput = () => {
         });
     });
   } else {
-    textContainer.textContent = ` 
-    Finished
+    if (EmptyPegs() == 32) {
+      textContainer.textContent = ` 
+    Completed Successfully !
     ${userMoves} move(s) done
-    Pegs Remaining :  ${33 - EmptyPegs()}
     `;
+    } else {
+      textContainer.textContent = ` 
+      Finished
+      ${userMoves} move(s) done
+      Pegs Remaining :  ${33 - EmptyPegs()}
+      `;
+    }
     document.getElementById("status").textContent = "Idle";
+    console.log("History", boardHistory);
+    boardHistory = [];
+    boardHistory.push(startingState);
   }
 };
 
@@ -472,6 +533,7 @@ var PrepareDestinationInput = () => {
             .getElementById("" + destination[0] + destination[1])
             .appendChild(peg);
           userMoves++;
+          boardHistory.push(GetBoardState());
           abortDestinationControllers.abort();
           PrepareSourceInput();
         },
@@ -505,6 +567,8 @@ var FullReset = () => {
   Click on the buttons below to get started
     `;
     document.getElementById("status").textContent = "Idle";
+    boardHistory = [];
+    boardHistory.push(startingState);
   } else {
     window.location.reload();
   }
