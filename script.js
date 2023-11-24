@@ -291,6 +291,7 @@ var RunGame = async () => {
 
 // Run Experiment
 var RunExperiment = async (days) => {
+  document.getElementById("status").textContent = "Random Agent running";
   nExperiments = days;
   avgMoves = 0;
   avgPegsRemaining = 0;
@@ -302,6 +303,7 @@ var RunExperiment = async (days) => {
     avgPegsRemaining += 33 - EmptyPegs();
   }
   UpdateReport();
+  document.getElementById("status").textContent = "Idle";
 };
 
 // Function to initialize and add event handler for theme change
@@ -390,6 +392,7 @@ var userMoves = 0;
 // Function to play in manual mode
 var ManualMode = () => {
   ResetBoard();
+  document.getElementById("status").textContent = "Manual Mode";
   PrepareSourceInput();
 };
 
@@ -430,6 +433,7 @@ var PrepareSourceInput = () => {
     ${userMoves} move(s) done
     Pegs Remaining :  ${33 - EmptyPegs()}
     `;
+    document.getElementById("status").textContent = "Idle";
   }
 };
 
@@ -483,4 +487,17 @@ var PrepareDestinationInput = () => {
       abortDestinationControllers.abort();
       PrepareSourceInput();
     });
+};
+
+// Util function to handle full reset
+var FullReset = () => {
+  if (
+    document.getElementById("status").textContent === "Idle" ||
+    document.getElementById("status").textContent === "Manual Mode"
+  ) {
+    ResetBoard();
+    document.getElementById("status").textContent = "Idle";
+  } else {
+    window.location.reload();
+  }
 };

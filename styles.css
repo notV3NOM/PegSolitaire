@@ -154,11 +154,12 @@ body {
   margin-left: auto;
   margin-right: auto;
   margin-top: 60px;
-  font-size: large;
   overflow: hidden;
   resize: none;
   text-align: justify;
   border-color: transparent;
+  font-size: 16px;
+  font-family: "Roboto Mono";
 }
 
 .header {
@@ -210,6 +211,12 @@ body {
   gap: 20px;
 }
 
+.footerContainer {
+  position: absolute;
+  bottom: 0px;
+  padding-bottom: 10px;
+}
+
 /*Button CSS */
 .button-39 {
   background-color: #ffffff;
@@ -218,7 +225,7 @@ body {
   box-sizing: border-box;
   color: #111827;
   font-family: "Roboto Mono";
-  font-size: 0.875rem;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.25rem;
   padding: 0.75rem 1rem;
