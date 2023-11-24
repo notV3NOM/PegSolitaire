@@ -8,6 +8,8 @@ var sleepTime = 100;
 var nExperiments = 1;
 var avgMoves = 0;
 var avgPegsRemaining = 0;
+var starsId = "starsCSS";
+var wavesId = "wavesCSS";
 
 // Create the board
 var InitializeBoard = () => {
@@ -314,14 +316,65 @@ var InitThemeSwitch = () => {
     : "light";
   document.body.className = theme === "dark" ? "dark-mode" : "";
   localStorage.setItem("theme", theme);
+  HandleThemeCSSLoading(theme);
 
   const toggle = document.getElementById("toggleInputID");
+  toggle.checked = theme === "dark" ? true : false;
   toggle.addEventListener("change", (e) => {
     const theme = e.target.checked ? "dark" : "light";
     document.body.className = theme === "dark" ? "dark-mode" : "";
     localStorage.setItem("theme", theme);
+    HandleThemeCSSLoading(theme);
   });
-  toggle.checked = theme === "dark" ? true : false;
+};
+
+// Function to load stars CSS
+var LoadStars = () => {
+  if (!document.getElementById(starsId)) {
+    var head = document.getElementsByTagName("head")[0];
+    var link = document.createElement("link");
+    link.id = starsId;
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = "stars.css";
+    link.media = "all";
+    head.appendChild(link);
+  }
+};
+
+// Function to remove stars CSS
+var RemoveStars = () => {
+  document.getElementById(starsId)?.remove();
+};
+
+// Function to load waves CSS
+var LoadWaves = () => {
+  if (!document.getElementById(wavesId)) {
+    var head = document.getElementsByTagName("head")[0];
+    var link = document.createElement("link");
+    link.id = wavesId;
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = "waves.css";
+    link.media = "all";
+    head.appendChild(link);
+  }
+};
+
+// Function to remove waves CSS
+var RemoveWaves = () => {
+  document.getElementById(wavesId)?.remove();
+};
+
+// Util function to handle theme switch
+var HandleThemeCSSLoading = (theme) => {
+  if (theme === "dark") {
+    RemoveWaves();
+    LoadStars();
+  } else {
+    RemoveStars();
+    LoadWaves();
+  }
 };
 
 InitThemeSwitch();
