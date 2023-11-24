@@ -16,13 +16,23 @@
     <script src="script.js" defer></script>
   </head>
   <body class="dark-mode">
-    <script>
-      if (localStorage.getItem("light-theme") === "true") {
-        document.body.classList.toggle("dark-mode");
-      }
-    </script>
     <div class="topBar">
       <div class="header">Peg Solitaire</div>
+      <div class="themeButton">
+        <div class="toggle">
+          <input
+            class="toggle-input"
+            type="checkbox"
+            id="toggleInputID"
+            checked
+          />
+          <div class="toggle-bg"></div>
+          <div class="toggle-switch">
+            <div class="toggle-switch-figure"></div>
+            <div class="toggle-switch-figureAlt"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="boardContainer" id="boardContainerID"></div>
     <textarea
@@ -45,19 +55,6 @@
         role="button"
       >
         Reset
-      </button>
-      <button
-        onclick="document.body.classList.toggle('dark-mode');
-        if(document.body.classList.contains('dark-mode')){
-          localStorage.setItem('light-theme', false);  
-        }
-        else {
-          localStorage.setItem('light-theme', true);
-        }"
-        class="button-39"
-        role="button"
-      >
-        Switch Theme
       </button>
     </div>
   </body>

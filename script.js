@@ -237,6 +237,14 @@ var ClearCells = () => {
 
 // Util Function to clear all event listeners
 var ClearListeners = () => {
+  for (let i = 0; i < boardSize; ++i) {
+    for (let j = 0; j < boardSize; ++j) {
+      let lastMove = document.getElementById("" + i + j).firstChild;
+      if (lastMove && lastMove.className === "movedPeg") {
+        lastMove.className = "peg";
+      }
+    }
+  }
   board.innerHTML = board.innerHTML;
 };
 
@@ -294,6 +302,29 @@ var RunExperiment = async (days) => {
   UpdateReport();
 };
 
+// Function to initialize and add event handler for theme change
+var InitThemeSwitch = () => {
+  const { matches: userPrefersDark } = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  );
+  let theme = localStorage.getItem("theme")
+    ? localStorage.getItem("theme")
+    : userPrefersDark
+    ? "dark"
+    : "light";
+  document.body.className = theme === "dark" ? "dark-mode" : "";
+  localStorage.setItem("theme", theme);
+
+  const toggle = document.getElementById("toggleInputID");
+  toggle.addEventListener("change", (e) => {
+    const theme = e.target.checked ? "dark" : "light";
+    document.body.className = theme === "dark" ? "dark-mode" : "";
+    localStorage.setItem("theme", theme);
+  });
+  toggle.checked = theme === "dark" ? true : false;
+};
+
+InitThemeSwitch();
 InitializeBoard();
 textContainer.textContent = `
   Welcome to Peg Solitaire !
