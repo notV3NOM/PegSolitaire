@@ -413,8 +413,16 @@ a {
 }
 
 @media (max-width: 500px) {
-  .toggle {
-    top: 100px;
+  .topBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .themeButton {
+    position: unset;
   }
 }
 
