@@ -493,7 +493,7 @@ var PrepareSourceInput = () => {
   } else {
     if (EmptyPegs() == 32) {
       textContainer.textContent = ` 
-    Completed Successfully !
+    Completed Successfully ! \n
     ${userMoves} move(s) done
     `;
       document.getElementById("celebrations").style.display = "";
