@@ -485,24 +485,36 @@ var PrepareSourceInput = () => {
       ${AllowedMoves().length} legal moves can be performed 
     `;
     MoveablePegsActual().forEach((peg) => {
-      document.getElementById("" + peg[0] + peg[1]).firstChild.className =
-        "moveablePeg";
-      document
-        .getElementById("" + peg[0] + peg[1])
-        .addEventListener("click", function () {
-          document.getElementById("" + peg[0] + peg[1]).firstChild.className =
-            "selectedPeg";
-          sourcePeg = [peg[0], peg[1]];
-          MoveablePegsActual().forEach((remainingPeg) => {
-            if (!Equal(peg, remainingPeg)) {
-              document.getElementById(
-                "" + remainingPeg[0] + remainingPeg[1]
-              ).firstChild.className = "peg";
-            }
-          });
-          abortSourceControllers.abort();
-          PrepareDestinationInput();
+      const pegElement = document.getElementById(
+        "" + peg[0] + peg[1]
+      ).firstChild;
+      pegElement.className = "moveablePeg";
+      pegElement.draggable = true; // Enable drag-and-drop for pegs
+
+      pegElement.addEventListener("dragstart", (e) => {
+        pegElement.style.display = "none";
+        e.dataTransfer.setData("text/plain", JSON.stringify(peg));
+      });
+
+      // Programmatically start the drag when the page loads
+      pegElement.addEventListener("mouseover", () => {
+        pegElement.draggable = true;
+        pegElement.click(); // Programmatically trigger the click event
+      });
+
+      pegElement.addEventListener("click", function () {
+        pegElement.className = "selectedPeg";
+        sourcePeg = [peg[0], peg[1]];
+        MoveablePegsActual().forEach((remainingPeg) => {
+          if (!Equal(peg, remainingPeg)) {
+            document.getElementById(
+              "" + remainingPeg[0] + remainingPeg[1]
+            ).firstChild.className = "peg";
+          }
         });
+        abortSourceControllers.abort();
+        PrepareDestinationInput();
+      });
     });
   } else {
     if (EmptyPegs() == 32) {
@@ -537,41 +549,51 @@ var PrepareDestinationInput = () => {
       allowedDestinations.add("" + destination[0] + destination[1]);
     }
   });
+
   allowedDestinations.forEach((destination) => {
-    document
-      .getElementById("" + destination[0] + destination[1])
-      .addEventListener(
-        "click",
-        function () {
-          RemovePeg(sourcePeg);
-          RemovePeg([Number(destination[0]), Number(destination[1])]);
-          RemovePeg(
-            FindBetweenPeg(sourcePeg, [
-              Number(destination[0]),
-              Number(destination[1]),
-            ])
-          );
-          ClearCells();
-          var peg = document.createElement("span");
-          peg.className = "movedPeg";
-          document
-            .getElementById("" + destination[0] + destination[1])
-            .appendChild(peg);
-          userMoves++;
-          boardHistory.push(GetBoardState());
-          abortDestinationControllers.abort();
-          PrepareSourceInput();
-        },
-        {
-          signal: abortDestinationControllers.signal,
-        }
-      );
-    document.getElementById("" + destination[0] + destination[1]).className =
-      "allowedCell";
+    const destinationElement = document.getElementById(
+      "" + destination[0] + destination[1]
+    );
+
+    destinationElement.addEventListener(
+      "dragover",
+      (e) => {
+        e.preventDefault();
+      },
+      { passive: false }
+    );
+
+    destinationElement.addEventListener(
+      "drop",
+      (e) => {
+        e.preventDefault();
+        RemovePeg(sourcePeg);
+        RemovePeg([Number(destination[0]), Number(destination[1])]);
+        RemovePeg(
+          FindBetweenPeg(sourcePeg, [
+            Number(destination[0]),
+            Number(destination[1]),
+          ])
+        );
+        ClearCells();
+        var peg = document.createElement("span");
+        peg.className = "movedPeg";
+        destinationElement.appendChild(peg);
+        userMoves++;
+        boardHistory.push(GetBoardState());
+        abortDestinationControllers.abort();
+        PrepareSourceInput();
+      },
+      {
+        signal: abortDestinationControllers.signal,
+      }
+    );
+    destinationElement.className = "allowedCell";
   });
+
   document
     .getElementById("" + sourcePeg[0] + sourcePeg[1])
-    .addEventListener("click", function () {
+    .addEventListener("mouseout", function () {
       ClearCells();
       abortDestinationControllers.abort();
       PrepareSourceInput();
