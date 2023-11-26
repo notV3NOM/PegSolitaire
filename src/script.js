@@ -491,14 +491,12 @@ var PrepareSourceInput = () => {
       pegElement.className = "moveablePeg";
       pegElement.draggable = true; // Enable drag-and-drop for pegs
 
-      pegElement.addEventListener("dragstart", (e) => {
-        pegElement.style.display = "none";
-        e.dataTransfer.setData("text/plain", JSON.stringify(peg));
+      pegElement.addEventListener("mouseover", () => {
+        pegElement.click(); // Programmatically trigger the click event
       });
 
-      // Programmatically start the drag when the page loads
-      pegElement.addEventListener("mouseover", () => {
-        pegElement.draggable = true;
+      pegElement.addEventListener("touchstart", (e) => {
+        e.preventDefault();
         pegElement.click(); // Programmatically trigger the click event
       });
 
@@ -555,6 +553,25 @@ var PrepareDestinationInput = () => {
       "" + destination[0] + destination[1]
     );
 
+    destinationElement.addEventListener("click", function () {
+      RemovePeg(sourcePeg);
+      RemovePeg([Number(destination[0]), Number(destination[1])]);
+      RemovePeg(
+        FindBetweenPeg(sourcePeg, [
+          Number(destination[0]),
+          Number(destination[1]),
+        ])
+      );
+      ClearCells();
+      var peg = document.createElement("span");
+      peg.className = "movedPeg";
+      destinationElement.appendChild(peg);
+      userMoves++;
+      boardHistory.push(GetBoardState());
+      abortDestinationControllers.abort();
+      PrepareSourceInput();
+    });
+
     destinationElement.addEventListener(
       "dragover",
       (e) => {
@@ -594,6 +611,15 @@ var PrepareDestinationInput = () => {
   document
     .getElementById("" + sourcePeg[0] + sourcePeg[1])
     .addEventListener("mouseout", function () {
+      ClearCells();
+      abortDestinationControllers.abort();
+      PrepareSourceInput();
+    });
+
+  document
+    .getElementById("" + sourcePeg[0] + sourcePeg[1])
+    .addEventListener("touchstart", function (e) {
+      e.preventDefault();
       ClearCells();
       abortDestinationControllers.abort();
       PrepareSourceInput();
