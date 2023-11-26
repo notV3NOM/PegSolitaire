@@ -235,6 +235,11 @@ a {
   text-align: center;
 }
 
+.dragging {
+  background: transparent;
+  color: transparent;
+}
+
 /*Button CSS */
 .button-39 {
   background-color: #ffffff;

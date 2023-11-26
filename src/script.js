@@ -608,22 +608,30 @@ var PrepareDestinationInput = () => {
     destinationElement.className = "allowedCell";
   });
 
-  document
-    .getElementById("" + sourcePeg[0] + sourcePeg[1])
-    .addEventListener("mouseout", function () {
-      ClearCells();
-      abortDestinationControllers.abort();
-      PrepareSourceInput();
-    });
+  let sourcePegElement = document.getElementById(
+    "" + sourcePeg[0] + sourcePeg[1]
+  );
 
-  document
-    .getElementById("" + sourcePeg[0] + sourcePeg[1])
-    .addEventListener("touchstart", function (e) {
-      e.preventDefault();
-      ClearCells();
-      abortDestinationControllers.abort();
-      PrepareSourceInput();
-    });
+  sourcePegElement.addEventListener("mouseout", function () {
+    ClearCells();
+    abortDestinationControllers.abort();
+    PrepareSourceInput();
+  });
+
+  sourcePegElement.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    ClearCells();
+    abortDestinationControllers.abort();
+    PrepareSourceInput();
+  });
+
+  sourcePegElement.addEventListener("drag", function (e) {
+    e.target.classList.add("dragging");
+  });
+
+  sourcePegElement.addEventListener("dragend", function (e) {
+    e.target.classList.remove("dragging");
+  });
 };
 
 // Util function to handle full reset
