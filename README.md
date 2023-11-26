@@ -7,8 +7,7 @@
 
 ### TODO
 
-- console (ctrl shift p) for advanced commands
-- Add peg color highlighting meaning
+- Add Guide with peg color highlighting meaning
 
 ### License
 
