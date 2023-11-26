@@ -13,6 +13,7 @@ var wavesId = "wavesCSS";
 var boardHistory = [];
 var boardState = "";
 const startingState = "111111111111111101111111111111111";
+var cellMapping = new Map();
 
 // Create the board
 var InitializeBoard = () => {
@@ -94,7 +95,21 @@ var MovePeg = (startPos, endPos) => {
       UpdateStats();
     }
   });
+  if (!movePerformed) {
+    console.log("Attempted invalid move ", startPos, endPos);
+    console.log("Valid moves were ", GetValidMoves(startPos));
+  }
   return movePerformed;
+};
+
+// Function to perform Move without validation
+var MovePegForce = (startPos, endPos) => {
+  RemovePeg(endPos);
+  RemovePeg(startPos);
+  RemovePeg(FindBetweenPeg(startPos, endPos));
+  var peg = document.createElement("span");
+  peg.className = "movedPeg";
+  document.getElementById("" + endPos[0] + endPos[1]).appendChild(peg);
 };
 
 // Util Function to "add" tuples
@@ -210,14 +225,6 @@ var RandomMove = () => {
   MovePeg(randomElement[0], randomElement[1]);
 };
 
-// Util Function to perform move using given heuristic
-var IntelligentMove = (heuristic) => {
-  let allowedMoves = AllowedMoves();
-  if (!allowedMoves.length) return;
-  let move = heuristic(allowedMoves);
-  MovePeg(move[0], move[1]);
-};
-
 // Util Function to count empty Pegs
 var EmptyPegs = () => {
   let count = 0;
@@ -272,6 +279,16 @@ var UpdateReport = () => {
   `;
 };
 
+// Util Function to add dfs report
+var UpdateDfsReport = (steps, time) => {
+  textContainer.textContent = `
+  Report
+  Strategy : DFS
+  Number of states explored : ${steps}
+  Time taken : ${time} ms
+  `;
+};
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Util Function to Reset Board
@@ -294,9 +311,10 @@ var RunGame = async () => {
 
 // Run Experiment
 var RunExperiment = async (days) => {
-  if (document.getElementById("status").textContent === "Random Agent running")
-    return;
-  document.getElementById("status").textContent = "Random Agent running";
+  document.getElementById("status").textContent = "Random Agent : Running";
+  document.getElementById("randomBtn").style.display = "none";
+  document.getElementById("dfsBtn").style.display = "none";
+  document.getElementById("manualBtn").style.display = "none";
   nExperiments = days;
   avgMoves = 0;
   avgPegsRemaining = 0;
@@ -456,6 +474,10 @@ var userMoves = 0;
 var ManualMode = () => {
   ResetBoard();
   document.getElementById("status").textContent = "Manual Mode";
+  document.getElementById("undoBtn").style.display = "unset";
+  document.getElementById("randomBtn").style.display = "none";
+  document.getElementById("dfsBtn").style.display = "none";
+  document.getElementById("manualBtn").style.display = "none";
   PrepareSourceInput();
 };
 
@@ -504,6 +526,7 @@ var PrepareSourceInput = () => {
       Pegs Remaining :  ${33 - EmptyPegs()}
       `;
     }
+    document.getElementById("undoBtn").style.display = "none";
     document.getElementById("status").textContent = "Idle";
     boardHistory = [];
     boardHistory.push(startingState);
@@ -577,9 +600,163 @@ var FullReset = () => {
   Click on the buttons below to start
     `;
     document.getElementById("status").textContent = "Idle";
+    document.getElementById("undoBtn").style.display = "none";
+    document.getElementById("randomBtn").style.display = "unset";
+    document.getElementById("dfsBtn").style.display = "unset";
+    document.getElementById("manualBtn").style.display = "unset";
     boardHistory = [];
     boardHistory.push(startingState);
   } else {
     window.location.reload();
   }
+};
+
+class PegSolitaire {
+  constructor(initialState) {
+    this.initialState = initialState;
+    this.visited = [];
+    this.memoryMap = new Map();
+    this.execTime = 0;
+  }
+
+  dfs(board) {
+    const stack = [{ board, steps: 0 }];
+
+    while (stack.length > 0) {
+      const { board, steps } = stack.pop();
+
+      SetBoardState(board);
+
+      if (33 - EmptyPegs() === 1) {
+        return true;
+      }
+
+      if (!this.visited.includes(board)) {
+        this.visited.push(board);
+      }
+
+      const possibleMoves = AllowedMoves();
+
+      possibleMoves.forEach(([from, to]) => {
+        SetBoardState(board);
+        MovePeg(from, to);
+        let newBoard = GetBoardState();
+
+        this.memoryMap.set(newBoard, board);
+
+        if (!this.visited.includes(newBoard)) {
+          stack.push({ board: newBoard, steps: steps + 1 });
+        }
+      });
+    }
+
+    return false; // No solution found from this state
+  }
+
+  findSolution() {
+    let startTime = performance.now();
+    const foundSolution = this.dfs(this.initialState);
+    this.execTime = performance.now() - startTime;
+
+    if (!foundSolution) {
+      console.log("No solution found.");
+    }
+  }
+
+  reconstructPath() {
+    let path = ["000000000000000010000000000000000"];
+    let u = this.memoryMap.get("000000000000000010000000000000000");
+    while (u) {
+      path.push(u);
+      u = this.memoryMap.get(u);
+    }
+    return path.reverse();
+  }
+}
+
+var MakeMap = () => {
+  let count = -1;
+  for (let i = 0; i < 7; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (InsideBoard([i, j])) {
+        ++count;
+        cellMapping.set("" + i + j, count);
+      }
+    }
+  }
+};
+
+var RunDFS = () => {
+  ResetBoard();
+  document.getElementById("status").textContent = "DFS : Exploring";
+  document.getElementById("randomBtn").style.display = "none";
+  document.getElementById("dfsBtn").style.display = "none";
+  document.getElementById("manualBtn").style.display = "none";
+  textContainer.textContent = "Exploring...";
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const pegSolitaireGame = new PegSolitaire(startingState);
+      MakeMap();
+      pegSolitaireGame.findSolution();
+      displayDfsSolution(pegSolitaireGame);
+    });
+  });
+};
+
+var displayDfsSolution = async (pegSolitaireGame) => {
+  UpdateDfsReport(pegSolitaireGame.visited.length, pegSolitaireGame.execTime);
+  ResetBoard();
+  let solutionPath = pegSolitaireGame.reconstructPath();
+  document.getElementById("status").textContent = "DFS : Displaying";
+  await sleep(2000);
+  for (let i = 1; i < solutionPath.length; ++i) {
+    let m = findMove(solutionPath[i - 1], solutionPath[i]);
+    // ValidMoveChecker(m[0], m[1]);
+    MovePegForce(m[0], m[1]);
+    await sleep(1000);
+  }
+  pegSolitaireGame = null;
+  document.getElementById("status").textContent = "Idle";
+};
+
+var findMove = (oldBoard, newBoard) => {
+  const oldArray = oldBoard.split("").map(Number);
+  const newArray = newBoard.split("").map(Number);
+
+  let diff = oldArray.reduce((acc, value, index) => {
+    if (value !== newArray[index]) {
+      acc.push(index);
+    }
+    return acc;
+  }, []);
+
+  let pegs = diff.map((val) => {
+    let temp = [...cellMapping].find(([key, value]) => val === value)[0];
+    return temp;
+  });
+
+  let destination = pegs.find((peg) => oldArray[cellMapping.get(peg)] === 0);
+
+  let source =
+    pegs[0] === destination
+      ? [Number(pegs[2][0]), Number(pegs[2][1])]
+      : [Number(pegs[0][0]), Number(pegs[0][1])];
+
+  return [source, [Number(destination[0]), Number(destination[1])]];
+};
+
+var ValidMoveChecker = (startingPos, EndPos) => {
+  if (
+    startingPos[0] === EndPos[0] &&
+    Math.abs(startingPos[1] - EndPos[1]) === 2
+  ) {
+    return true;
+  } else if (
+    startingPos[1] === EndPos[1] &&
+    Math.abs(startingPos[0] - EndPos[0]) === 2
+  ) {
+    return true;
+  }
+  console.log("Invalid move found : ", startingPos, EndPos);
+  return false;
 };
