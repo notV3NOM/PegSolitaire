@@ -74,17 +74,6 @@ module.exports = function (grunt) {
         },
       },
     },
-
-    // Connect task
-    connect: {
-      server: {
-        options: {
-          port: 9000,
-          base: "dist",
-          livereload: true,
-        },
-      },
-    },
   });
 
   // Load grunt plugins
@@ -97,7 +86,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-connect");
 
   // Default task
-  grunt.registerTask("default", ["prod", "connect", "watch"]);
+  grunt.registerTask("default", ["prod", "watch"]);
 
   // Production task
   grunt.registerTask("prod", ["clean", "sass", "uglify", "cssmin", "copy"]);

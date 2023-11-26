@@ -43,13 +43,31 @@
       readonly
     ></textarea>
     <div class="buttonContainer">
-      <button onclick="ManualMode();" class="button-39" role="button">
+      <button
+        onclick="ManualMode();"
+        class="button-39"
+        role="button"
+        id="manualBtn"
+      >
         Start Manual Mode
       </button>
-      <button onclick="RunExperiment(1);" class="button-39" role="button">
+      <button
+        onclick="RunExperiment(1);"
+        class="button-39"
+        role="button"
+        id="randomBtn"
+      >
         Start Random Agent
       </button>
-      <button onclick="FullReset();" class="button-39" role="button">
+      <button onclick="RunDFS();" class="button-39" role="button" id="dfsBtn">
+        Start DFS
+      </button>
+      <button
+        onclick="FullReset();"
+        class="button-39"
+        role="button"
+        id="resetBtn"
+      >
         Reset
       </button>
       <button
@@ -57,6 +75,7 @@
         class="button-39"
         role="button"
         id="undoBtn"
+        style="display: none"
       >
         Undo Move
       </button>
