@@ -302,7 +302,7 @@ var RunGame = async () => {
 
 // Run Experiment
 var RunExperiment = async (days) => {
-  document.getElementById("status").textContent = "Random Agent : Running";
+  updateStatusWithDot("Random Agent : Running");
   document.getElementById("randomBtn").style.display = "none";
   document.getElementById("dfsBtn").style.display = "none";
   document.getElementById("manualBtn").style.display = "none";
@@ -317,7 +317,7 @@ var RunExperiment = async (days) => {
     avgPegsRemaining += 33 - EmptyPegs();
   }
   UpdateReport();
-  document.getElementById("status").textContent = "Idle";
+  updateStatusWithDot("Idle");
 };
 
 // Function to initialize and add event handler for theme change
@@ -465,7 +465,7 @@ var userMoves = 0;
 // Function to play in manual mode
 var ManualMode = () => {
   ResetBoard();
-  document.getElementById("status").textContent = "Manual Mode";
+  updateStatusWithDot("Manual Mode");
   document.getElementById("undoBtn").style.display = "unset";
   document.getElementById("randomBtn").style.display = "none";
   document.getElementById("dfsBtn").style.display = "none";
@@ -529,7 +529,7 @@ var PrepareSourceInput = () => {
       `;
     }
     document.getElementById("undoBtn").style.display = "none";
-    document.getElementById("status").textContent = "Idle";
+    updateStatusWithDot("Idle");
     boardHistory = [];
     boardHistory.push(startingState);
   }
@@ -647,7 +647,7 @@ var FullReset = () => {
   Welcome to Peg Solitaire ! \n
   Click on the buttons below to start
     `;
-    document.getElementById("status").textContent = "Idle";
+    updateStatusWithDot("Idle");
     document.getElementById("undoBtn").style.display = "none";
     document.getElementById("randomBtn").style.display = "unset";
     document.getElementById("dfsBtn").style.display = "unset";
@@ -658,6 +658,25 @@ var FullReset = () => {
     window.location.reload();
   }
 };
+
+// Function to update the color of the dot based on the status text
+function updateStatusWithDot(text) {
+  document.getElementById("status").textContent = text;
+  const dotElement = document.getElementById("statusDot");
+  const statusText = text.toLowerCase();
+
+  // Set the appropriate background color based on the status
+  if (statusText.includes("idle")) {
+    dotElement.style.backgroundColor = "green";
+  } else if (
+    statusText.includes("running") ||
+    statusText.includes("exploring")
+  ) {
+    dotElement.style.backgroundColor = "red";
+  } else {
+    dotElement.style.backgroundColor = "blue";
+  }
+}
 
 class PegSolitaire {
   constructor(initialState) {
@@ -736,7 +755,7 @@ var MakeMap = () => {
 
 var RunDFS = () => {
   ResetBoard();
-  document.getElementById("status").textContent = "DFS : Exploring";
+  updateStatusWithDot("DFS : Exploring");
   document.getElementById("randomBtn").style.display = "none";
   document.getElementById("dfsBtn").style.display = "none";
   document.getElementById("manualBtn").style.display = "none";
@@ -755,7 +774,7 @@ var displayDfsSolution = async (pegSolitaireGame) => {
   UpdateDfsReport(pegSolitaireGame.visited.length, pegSolitaireGame.execTime);
   ResetBoard();
   let solutionPath = pegSolitaireGame.reconstructPath();
-  document.getElementById("status").textContent = "DFS : Displaying";
+  updateStatusWithDot("DFS : Displaying");
   await sleep(2000);
   for (let i = 1; i < solutionPath.length; ++i) {
     let m = findMove(solutionPath[i - 1], solutionPath[i]);
@@ -764,7 +783,7 @@ var displayDfsSolution = async (pegSolitaireGame) => {
     await sleep(1000);
   }
   pegSolitaireGame = null;
-  document.getElementById("status").textContent = "Idle";
+  updateStatusWithDot("Idle");
 };
 
 var findMove = (oldBoard, newBoard) => {

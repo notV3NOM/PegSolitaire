@@ -240,6 +240,22 @@ a {
   color: transparent;
 }
 
+.statusContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+  background-color: green;
+}
+
 /*Button CSS */
 .button-39 {
   background-color: #ffffff;
