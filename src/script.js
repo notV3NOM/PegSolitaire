@@ -51,55 +51,46 @@ var InitializeBoard = () => {
 // Function to return valid Moves
 // Uses the current player position and returns a list of cells to which player can move
 var GetValidMoves = (playerPosition) => {
-  if (!InsideBoard(playerPosition)) return [];
-  if (IsEmpty(playerPosition)) return [];
-  let moveUp = [-2, 0];
-  let moveDown = [2, 0];
-  let moveLeft = [0, -2];
-  let moveRight = [0, 2];
+  if (!InsideBoard(playerPosition) || IsEmpty(playerPosition)) {
+    return [];
+  }
 
-  let playerUp = Add(playerPosition, moveUp);
-  let playerDown = Add(playerPosition, moveDown);
-  let playerLeft = Add(playerPosition, moveLeft);
-  let playerRight = Add(playerPosition, moveRight);
+  const moveOffsets = [
+    [-2, 0], // move up
+    [2, 0], // move down
+    [0, -2], // move left
+    [0, 2], // move right
+  ];
 
-  let validMoves = [];
-  let tempMoves = [];
-  tempMoves.push(playerUp, playerDown, playerLeft, playerRight);
-
-  tempMoves.forEach((move) => {
+  return moveOffsets.reduce((validMoves, offset) => {
+    const move = Add(playerPosition, offset);
     if (InsideBoard(move) && IsEmpty(move)) {
       validMoves.push(move);
     }
-  });
-
-  return validMoves;
+    return validMoves;
+  }, []);
 };
 
 // Function to perform Move
 // Takes a cell to be moved to and moves the player
 var MovePeg = (startPos, endPos) => {
-  let movePerformed = false;
-  GetValidMoves(startPos).forEach((move) => {
-    if (move[0] === endPos[0] && move[1] === endPos[1]) {
-      // console.log("Moving from ", startPos, endPos);
-      RemovePeg(endPos);
-      RemovePeg(startPos);
-      RemovePeg(FindBetweenPeg(startPos, endPos));
-      var peg = document.createElement("span");
-      peg.className = "movedPeg";
-      //   peg.textContent = "" + endPos[0] + endPos[1];
-      document.getElementById("" + endPos[0] + endPos[1]).appendChild(peg);
-      movePerformed = true;
-      nMoves++;
-      UpdateStats();
-    }
-  });
-  if (!movePerformed) {
+  const validMove = GetValidMoves(startPos).find((move) => Equal(move, endPos));
+
+  if (validMove) {
+    RemovePeg(endPos);
+    RemovePeg(startPos);
+    RemovePeg(FindBetweenPeg(startPos, endPos));
+    const peg = document.createElement("span");
+    peg.className = "movedPeg";
+    document.getElementById("" + endPos[0] + endPos[1]).appendChild(peg);
+    nMoves++;
+    UpdateStats();
+    return true;
+  } else {
     console.log("Attempted invalid move ", startPos, endPos);
     console.log("Valid moves were ", GetValidMoves(startPos));
+    return false;
   }
-  return movePerformed;
 };
 
 // Function to perform Move without validation
@@ -459,6 +450,7 @@ var UndoMove = () => {
   }
 };
 
+// Initializations
 InitThemeSwitch();
 InitializeBoard();
 textContainer.textContent = `
