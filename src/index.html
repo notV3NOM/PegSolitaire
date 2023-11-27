@@ -224,15 +224,18 @@
       <div class="commands">
         <div
           class="command selected"
-          onclick="toggleCommandPalette();RunExperiment(5);"
+          onclick="toggleCommandPalette();
+          document.getElementById('toggleInputID').checked=!document.getElementById('toggleInputID').checked;
+          document.getElementById('toggleInputID').dispatchEvent(new Event('change'));
+          "
         >
-          Start 5 Random Agents
+          Switch Theme
         </div>
-        <div
-          class="command selected"
-          onclick="toggleCommandPalette();RunExperiment(1);"
-        >
+        <div class="command" onclick="toggleCommandPalette();RunExperiment(1);">
           Start Random Agent
+        </div>
+        <div class="command" onclick="toggleCommandPalette();RunExperiment(5);">
+          Start 5 Random Agents
         </div>
         <div
           class="command selected"
@@ -255,6 +258,7 @@
       </div>
       <div class="command-palette-footer">
         <span class="keyboard-key">p</span> toggle palette &nbsp; &nbsp;
+        <span class="keyboard-key"> &#8645;</span> navigate &nbsp; &nbsp;
         <span class="keyboard-key">esc</span> dismiss
       </div>
     </div>
