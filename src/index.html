@@ -13,7 +13,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
+    <script type="module" src="script.js" defer></script>
   </head>
   <body class="dark-mode">
     <div class="topBar">
@@ -43,42 +43,11 @@
       readonly
     ></textarea>
     <div class="buttonContainer">
-      <button
-        onclick="ManualMode();"
-        class="button-39"
-        role="button"
-        id="manualBtn"
-      >
-        Start Manual Mode
-      </button>
-      <button
-        onclick="RunExperiment(1);"
-        class="button-39"
-        role="button"
-        id="randomBtn"
-      >
-        Start Random Agent
-      </button>
-      <button onclick="RunDFS();" class="button-39" role="button" id="dfsBtn">
-        Start DFS
-      </button>
-      <button
-        onclick="FullReset();"
-        class="button-39"
-        role="button"
-        id="resetBtn"
-      >
-        Reset
-      </button>
-      <button
-        onclick="UndoMove();"
-        class="button-39"
-        role="button"
-        id="undoBtn"
-        style="display: none"
-      >
-        Undo Move
-      </button>
+      <button class="button-39" id="manualBtn">Start Manual Mode</button>
+      <button class="button-39" id="randomBtn">Start Random Agent</button>
+      <button class="button-39" id="dfsBtn">Start DFS</button>
+      <button class="button-39" id="resetBtn">Reset</button>
+      <button class="button-39" id="undoBtn">Undo Move</button>
     </div>
     <div class="confetti-container" id="celebrations" style="display: none">
       <div class="confetti">
@@ -222,39 +191,13 @@
     <div class="wave"></div>
     <div class="command-palette" id="commandPalette">
       <div class="commands">
-        <div
-          class="command selected"
-          onclick="toggleCommandPalette();
-          document.getElementById('toggleInputID').checked=!document.getElementById('toggleInputID').checked;
-          document.getElementById('toggleInputID').dispatchEvent(new Event('change'));
-          "
-        >
-          Switch Theme
-        </div>
-        <div class="command" onclick="toggleCommandPalette();RunExperiment(1);">
-          Start Random Agent
-        </div>
-        <div class="command" onclick="toggleCommandPalette();RunExperiment(5);">
-          Start 5 Random Agents
-        </div>
-        <div
-          class="command selected"
-          onclick="toggleCommandPalette();ManualMode();"
-        >
-          Start Manual Mode
-        </div>
-        <div
-          class="command selected"
-          onclick="toggleCommandPalette();RunDFS();"
-        >
-          Start Depth First Search
-        </div>
-        <div class="command" onclick="toggleCommandPalette();UndoMove();">
-          Undo Move (Manual Mode)
-        </div>
-        <div class="command" onclick="toggleCommandPalette();FullReset();">
-          Reset
-        </div>
+        <div class="command selected" id="switchTheme">Switch Theme</div>
+        <div class="command" id="startRandomAgent">Start Random Agent</div>
+        <div class="command" id="start5RandomAgents">Start 5 Random Agents</div>
+        <div class="command" id="startManualMode">Start Manual Mode</div>
+        <div class="command" id="startDFS">Start Depth First Search</div>
+        <div class="command" id="undoMove">Undo Move (Manual Mode)</div>
+        <div class="command" id="fullReset">Reset</div>
       </div>
       <div class="command-palette-footer">
         <span class="keyboard-key">p</span> toggle palette &nbsp; &nbsp;
