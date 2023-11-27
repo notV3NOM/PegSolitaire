@@ -10,6 +10,7 @@ html {
 .dark-mode {
   --bg-color: #141e28;
   background-color: unset;
+  --hover-color: rgba(201, 197, 197, 0.5);
 }
 
 #stars {
