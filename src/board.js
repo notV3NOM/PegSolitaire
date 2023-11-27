@@ -1,6 +1,5 @@
 export class PegSolitaireBoard {
   constructor() {
-    this._boardSize = 7;
     this.board = document.getElementById("boardContainerID");
     this.textContainer = document.getElementById("textContainerID");
     this.nMoves = 0;
@@ -29,7 +28,7 @@ export class PegSolitaireBoard {
   }
 
   static get boardSize() {
-    return this._boardSize;
+    return 7;
   }
 
   // Create the board
@@ -337,7 +336,7 @@ export class PegSolitaireBoard {
         break;
       }
       this.RandomMove();
-      await PegSolitaireBoard.sleep(sleepTime);
+      await PegSolitaireBoard.sleep(this.sleepTime);
     }
   };
 
@@ -362,6 +361,7 @@ export class PegSolitaireBoard {
 
   // Run Experiment
   RunExperiment = async (days) => {
+    this.FullReset();
     PegSolitaireBoard.updateStatusWithDot("Random Agent : Running");
     document.getElementById("randomBtn").style.display = "none";
     document.getElementById("dfsBtn").style.display = "none";
@@ -434,9 +434,9 @@ export class PegSolitaireBoard {
 
     if (len) {
       this.textContainer.textContent = `
-        ${this.userMoves} moves done
-        ${len} legal moves can be performed 
-      `;
+    ${this.userMoves} moves done
+    ${len} legal moves can be performed 
+    `;
       PegSolitaireBoard.MoveablePegsActual().forEach((peg) => {
         const pegElement = document.getElementById(
           "" + peg[0] + peg[1]
@@ -453,7 +453,7 @@ export class PegSolitaireBoard {
           pegElement.click(); // Programmatically trigger the click event
         });
 
-        pegElement.addEventListener("click", function () {
+        pegElement.addEventListener("click", () => {
           pegElement.className = "selectedPeg";
           this.sourcePeg = [peg[0], peg[1]];
           PegSolitaireBoard.MoveablePegsActual().forEach((remainingPeg) => {
@@ -506,14 +506,14 @@ export class PegSolitaireBoard {
         "" + destination[0] + destination[1]
       );
 
-      destinationElement.addEventListener("click", function () {
+      destinationElement.addEventListener("click", () => {
         PegSolitaireBoard.RemovePeg(this.sourcePeg);
         PegSolitaireBoard.RemovePeg([
           Number(destination[0]),
           Number(destination[1]),
         ]);
         PegSolitaireBoard.RemovePeg(
-          FindBetweenPeg(this.sourcePeg, [
+          PegSolitaireBoard.FindBetweenPeg(this.sourcePeg, [
             Number(destination[0]),
             Number(destination[1]),
           ])
@@ -571,24 +571,24 @@ export class PegSolitaireBoard {
       "" + this.sourcePeg[0] + this.sourcePeg[1]
     );
 
-    sourcePegElement.addEventListener("mouseout", function () {
+    sourcePegElement.addEventListener("mouseout", () => {
       PegSolitaireBoard.ClearCells();
       abortDestinationControllers.abort();
       this.PrepareSourceInput();
     });
 
-    sourcePegElement.addEventListener("touchstart", function (e) {
+    sourcePegElement.addEventListener("touchstart", (e) => {
       e.preventDefault();
       PegSolitaireBoard.ClearCells();
       abortDestinationControllers.abort();
       this.PrepareSourceInput();
     });
 
-    sourcePegElement.addEventListener("drag", function (e) {
+    sourcePegElement.addEventListener("drag", (e) => {
       e.target.classList.add("dragging");
     });
 
-    sourcePegElement.addEventListener("dragend", function (e) {
+    sourcePegElement.addEventListener("dragend", (e) => {
       e.target.classList.remove("dragging");
     });
   };
@@ -605,7 +605,7 @@ export class PegSolitaireBoard {
 
   // Function to play in manual mode
   ManualMode = () => {
-    this.ResetBoard();
+    this.FullReset();
     PegSolitaireBoard.updateStatusWithDot("Manual Mode");
     document.getElementById("undoBtn").style.display = "unset";
     document.getElementById("randomBtn").style.display = "none";
@@ -624,9 +624,9 @@ export class PegSolitaireBoard {
       this.userMoves = 0;
       this.ResetBoard();
       this.textContainer.textContent = `
-    Welcome to Peg Solitaire ! \n
-    Click on the buttons below to start
-      `;
+  Welcome to Peg Solitaire ! \n
+  Click on the buttons below to start
+    `;
       PegSolitaireBoard.updateStatusWithDot("Idle");
       document.getElementById("undoBtn").style.display = "none";
       document.getElementById("randomBtn").style.display = "unset";

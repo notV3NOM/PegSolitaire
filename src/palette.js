@@ -1,5 +1,4 @@
-// To track which option is selected
-var selectedIndex = 0;
+export var selectedIndex = 0;
 
 // To open/close command palette
 function toggleCommandPalette() {
@@ -9,60 +8,64 @@ function toggleCommandPalette() {
     commandPalette.style.display === "block" ? "none" : "block";
 }
 
-// Listener to catch key presses to open/close command palette
-document.addEventListener("keydown", function (event) {
-  const commandPalette = document.getElementById("commandPalette");
-  if (event.key === "Escape") {
-    commandPalette.style.display = "none";
-  } else if (event.key === "p") {
-    toggleCommandPalette();
-  }
-});
+const initCommandPalette = () => {
+  selectedIndex = 0;
 
-// Close command palette if clicked outside
-document.addEventListener("click", function (event) {
-  const commandPalette = document.getElementById("commandPalette");
-  if (
-    event.target !== commandPalette &&
-    !commandPalette.contains(event.target)
-  ) {
-    commandPalette.style.display = "none";
-  }
-});
+  // Listener to catch key presses to open/close command palette
+  document.addEventListener("keydown", function (event) {
+    const commandPalette = document.getElementById("commandPalette");
+    if (event.key === "Escape") {
+      commandPalette.style.display = "none";
+    } else if (event.key === "p") {
+      toggleCommandPalette();
+    }
+  });
 
-// Navigate inside command palette with arrow keys
-document.addEventListener("keydown", function (event) {
-  if (document.getElementById("commandPalette").style.display === "block") {
-    const commands = document.querySelectorAll(".command");
-
-    if (event.key === "ArrowUp" && selectedIndex > 0) {
-      selectedIndex--;
-    } else if (
-      event.key === "ArrowDown" &&
-      selectedIndex < commands.length - 1
+  // Close command palette if clicked outside
+  document.addEventListener("click", function (event) {
+    const commandPalette = document.getElementById("commandPalette");
+    if (
+      event.target !== commandPalette &&
+      !commandPalette.contains(event.target)
     ) {
-      selectedIndex++;
+      commandPalette.style.display = "none";
     }
+  });
 
-    commands.forEach((command, index) => {
-      if (index === selectedIndex) {
-        command.classList.add("selected");
-      } else {
-        command.classList.remove("selected");
+  // Navigate inside command palette with arrow keys
+  document.addEventListener("keydown", function (event) {
+    if (document.getElementById("commandPalette").style.display === "block") {
+      const commands = document.querySelectorAll(".command");
+
+      if (event.key === "ArrowUp" && selectedIndex > 0) {
+        selectedIndex--;
+      } else if (
+        event.key === "ArrowDown" &&
+        selectedIndex < commands.length - 1
+      ) {
+        selectedIndex++;
       }
-    });
 
-    if (event.key === "Enter") {
-      commands[selectedIndex].click();
+      commands.forEach((command, index) => {
+        if (index === selectedIndex) {
+          command.classList.add("selected");
+        } else {
+          command.classList.remove("selected");
+        }
+      });
+
+      if (event.key === "Enter") {
+        commands[selectedIndex].click();
+      }
     }
-  }
-});
+  });
 
-function switchTheme() {
-  toggleCommandPalette();
-  document.getElementById("toggleInputID").checked =
-    !document.getElementById("toggleInputID").checked;
-  document.getElementById("toggleInputID").dispatchEvent(new Event("change"));
-}
+  document.getElementById("switchTheme").onclick = function () {
+    toggleCommandPalette();
+    document.getElementById("toggleInputID").checked =
+      !document.getElementById("toggleInputID").checked;
+    document.getElementById("toggleInputID").dispatchEvent(new Event("change"));
+  };
+};
 
-document.getElementById("switchTheme").onclick = switchTheme;
+export { initCommandPalette, toggleCommandPalette };

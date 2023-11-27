@@ -1,19 +1,16 @@
 import { PegSolitaireBoard } from "./board.js";
 import { ThemeSwitcher } from "./theme.js";
 import { PegSolitaireDFS } from "./dfs.js";
-import "./palette.js";
+import {
+  selectedIndex,
+  toggleCommandPalette,
+  initCommandPalette,
+} from "./palette.js";
 
 const pegSolitaireBoard = new PegSolitaireBoard();
 const themeSwitcher = new ThemeSwitcher();
 themeSwitcher.initThemeSwitch();
-
-const addClickListener = (id, callback) => {
-  const element = document.getElementById(id);
-  element.onclick = () => {
-    toggleCommandPalette();
-    callback();
-  };
-};
+initCommandPalette();
 
 const runDFS = () => {
   pegSolitaireBoard.ResetBoard();
@@ -29,6 +26,16 @@ const runDFS = () => {
       pegSolitaireDFS.displayDfsSolution();
     });
   });
+};
+
+// Add click listeners
+
+const addClickListener = (id, callback) => {
+  const element = document.getElementById(id);
+  element.onclick = () => {
+    toggleCommandPalette();
+    callback();
+  };
 };
 
 addClickListener("manualBtn", pegSolitaireBoard.ManualMode);

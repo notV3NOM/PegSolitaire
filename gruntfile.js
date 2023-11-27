@@ -66,6 +66,12 @@ module.exports = function (grunt) {
       dist: ["dist"],
     },
 
+    shell: {
+      npmMinify: {
+        command: "npm run minify",
+      },
+    },
+
     // Watch task
     watch: {
       scripts: {
@@ -85,10 +91,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-contrib-sass");
   grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-shell");
 
   // Default task
   grunt.registerTask("default", ["prod", "watch"]);
-
+  grunt.registerTask("minify", ["shell:npmMinify"]);
   // Production task
-  grunt.registerTask("prod", ["clean", "sass", "uglify", "cssmin", "copy"]);
+  grunt.registerTask("prod", ["clean", "minify", "sass", "cssmin", "copy"]);
 };

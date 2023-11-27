@@ -1,4 +1,4 @@
-import { PegSolitaireBoard } from "./board";
+import { PegSolitaireBoard } from "./board.js";
 
 export class PegSolitaireDFS {
   constructor(pegSolitaireBoardInstance) {
@@ -58,7 +58,7 @@ export class PegSolitaireDFS {
 
   findSolution() {
     let startTime = performance.now();
-    const foundSolution = this.dfs();
+    const foundSolution = this.dfs(PegSolitaireBoard.defaultStartingState);
     this.execTime = performance.now() - startTime;
 
     if (!foundSolution) {
@@ -76,7 +76,7 @@ export class PegSolitaireDFS {
     return path.reverse();
   }
 
-  static findMove = (oldBoard, newBoard) => {
+  findMove = (oldBoard, newBoard) => {
     const oldArray = oldBoard.split("").map(Number);
     const newArray = newBoard.split("").map(Number);
 
@@ -114,7 +114,7 @@ export class PegSolitaireDFS {
     PegSolitaireBoard.updateStatusWithDot("DFS : Displaying");
     await PegSolitaireBoard.sleep(2000);
     for (let i = 1; i < solutionPath.length; ++i) {
-      let m = PegSolitaireDFS.findMove(solutionPath[i - 1], solutionPath[i]);
+      let m = this.findMove(solutionPath[i - 1], solutionPath[i]);
       // validMoveChecker(m[0], m[1]);
       PegSolitaireBoard.MovePegForce(m[0], m[1]);
       await PegSolitaireBoard.sleep(1000);
