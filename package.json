@@ -4,7 +4,9 @@
   "description": "Peg Solitaire",
   "main": "index.html",
   "scripts": {
-    "prod": "grunt prod"
+    "server": "live-server",
+    "prod": "grunt prod",
+    "minify": "webpack"
   },
   "keywords": [],
   "author": "notV3NOM",
@@ -12,11 +14,13 @@
   "devDependencies": {
     "grunt": "^1.6.1",
     "grunt-contrib-clean": "^2.0.1",
-    "grunt-contrib-connect": "^4.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^5.0.0",
     "grunt-contrib-sass": "^2.0.0",
     "grunt-contrib-uglify": "^5.2.2",
-    "grunt-contrib-watch": "^1.1.0"
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-shell": "^4.0.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   }
 }
