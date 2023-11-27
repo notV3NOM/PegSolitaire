@@ -6,6 +6,8 @@ module.exports = function (grunt) {
     uglify: {
       options: {
         mangle: false, // Preserve variable names
+        compress: false,
+        sourcemap: true,
       },
       my_target: {
         files: {
@@ -53,8 +55,8 @@ module.exports = function (grunt) {
       main: {
         files: [
           { expand: true, cwd: "src", src: ["*.html"], dest: "dist/" },
-          { expand: true, cwd: "src", src: ["*.png"], dest: "dist/" },
-          { expand: true, cwd: "src", src: ["favicon.ico"], dest: "dist/" },
+          { expand: true, cwd: "assets", src: ["*.png"], dest: "dist/" },
+          { expand: true, cwd: "assets", src: ["favicon.ico"], dest: "dist/" },
         ],
       },
     },
@@ -62,6 +64,12 @@ module.exports = function (grunt) {
     // Clean task
     clean: {
       dist: ["dist"],
+    },
+
+    shell: {
+      npmMinify: {
+        command: "npm run minify",
+      },
     },
 
     // Watch task
@@ -83,11 +91,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-contrib-sass");
   grunt.loadNpmTasks("grunt-contrib-watch");
-  grunt.loadNpmTasks("grunt-contrib-connect");
+  grunt.loadNpmTasks("grunt-shell");
 
   // Default task
   grunt.registerTask("default", ["prod", "watch"]);
-
+  grunt.registerTask("minify", ["shell:npmMinify"]);
   // Production task
-  grunt.registerTask("prod", ["clean", "sass", "uglify", "cssmin", "copy"]);
+  grunt.registerTask("prod", ["clean", "minify", "sass", "cssmin", "copy"]);
 };
