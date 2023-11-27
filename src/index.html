@@ -220,5 +220,43 @@
     <div class="wave"></div>
     <div class="wave"></div>
     <div class="wave"></div>
+    <div class="command-palette" id="commandPalette">
+      <div class="commands">
+        <div
+          class="command selected"
+          onclick="toggleCommandPalette();RunExperiment(5);"
+        >
+          Start 5 Random Agents
+        </div>
+        <div
+          class="command selected"
+          onclick="toggleCommandPalette();RunExperiment(1);"
+        >
+          Start Random Agent
+        </div>
+        <div
+          class="command selected"
+          onclick="toggleCommandPalette();ManualMode();"
+        >
+          Start Manual Mode
+        </div>
+        <div
+          class="command selected"
+          onclick="toggleCommandPalette();RunDFS();"
+        >
+          Start Depth First Search
+        </div>
+        <div class="command" onclick="toggleCommandPalette();UndoMove();">
+          Undo Move (Manual Mode)
+        </div>
+        <div class="command" onclick="toggleCommandPalette();FullReset();">
+          Reset
+        </div>
+      </div>
+      <div class="command-palette-footer">
+        <span class="keyboard-key">p</span> toggle palette &nbsp; &nbsp;
+        <span class="keyboard-key">esc</span> dismiss
+      </div>
+    </div>
   </body>
 </html>
