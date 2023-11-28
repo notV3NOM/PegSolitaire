@@ -426,6 +426,20 @@ export class PegSolitaireBoard {
     }
   };
 
+  // Function to toggle celebrations
+  ToggleCelebrations = (enabled) => {
+    if (enabled) {
+      document.getElementById("celebrations").style.display = "";
+      this.board.classList.add("golden");
+    } else {
+      document.getElementById("celebrations").style.display =
+        document.getElementById("celebrations").style.display === ""
+          ? "none"
+          : "";
+      this.board.classList.toggle("golden");
+    }
+  };
+
   // Util function to add source event listener
   PrepareSourceInput = () => {
     this.ClearListeners();
@@ -473,7 +487,7 @@ export class PegSolitaireBoard {
       Completed Successfully ! \n
       ${this.userMoves} move(s) done
       `;
-        document.getElementById("celebrations").style.display = "";
+        this.ToggleCelebrations(true);
       } else {
         this.textContainer.textContent = ` 
         Finished

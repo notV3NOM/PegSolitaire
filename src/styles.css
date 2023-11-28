@@ -304,6 +304,14 @@ a {
   font-weight: bold;
 }
 
+.golden {
+  .cell,
+  .allowedCell {
+    border-color: goldenrod;
+    box-shadow: 0 0 10px rgba(255, 223, 0, 0.8);
+  }
+}
+
 /*Button CSS */
 .button-39 {
   background-color: #ffffff;
