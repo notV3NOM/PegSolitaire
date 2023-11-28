@@ -16,8 +16,14 @@ const initCommandPalette = () => {
     const commandPalette = document.getElementById("commandPalette");
     if (event.key === "Escape") {
       commandPalette.style.display = "none";
+      document.getElementById("guide").style.display = "none";
     } else if (event.key === "p") {
       toggleCommandPalette();
+    } else if (event.key === "g") {
+      document.getElementById("guide").style.display =
+        document.getElementById("guide").style.display === "none"
+          ? "block"
+          : "none";
     }
   });
 
@@ -66,6 +72,34 @@ const initCommandPalette = () => {
       !document.getElementById("toggleInputID").checked;
     document.getElementById("toggleInputID").dispatchEvent(new Event("change"));
   };
+
+  document.getElementById("guide").style.display = "none";
+
+  // Function to toggle guide visibility
+  function toggleGuide() {
+    const guideElement = document.getElementById("guide");
+
+    // Toggle the display property
+    guideElement.style.display =
+      guideElement.style.display === "none" ? "block" : "none";
+  }
+
+  // Event listener on document to handle clicks
+  document.addEventListener("click", function (event) {
+    const guideButton = document.getElementById("guideBtnID");
+    const guideElement = document.getElementById("guide");
+
+    // Check if the clicked element is the guide button
+    if (event.target === guideButton) {
+      toggleGuide();
+    } else {
+      // Check if the clicked element is inside the guide
+      if (!guideElement.contains(event.target)) {
+        // Clicked outside the guide, close it
+        guideElement.style.display = "none";
+      }
+    }
+  });
 };
 
 export { initCommandPalette, toggleCommandPalette };

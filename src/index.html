@@ -173,15 +173,7 @@
           Made with <span style="color: #e25555">❤</span> by notV3NOM
         </a>
       </div>
-      <div>
-        <a
-          href="https://en.wikipedia.org/wiki/Peg_solitaire"
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          Guide
-        </a>
-      </div>
+      <div class="guideBtn" id="guideBtnID">Guide</div>
     </div>
     <div id="stars"></div>
     <div id="stars2"></div>
@@ -192,16 +184,68 @@
     <div class="command-palette" id="commandPalette">
       <div class="commands">
         <div class="command selected" id="switchTheme">Switch Theme</div>
-        <div class="command" id="startRandomAgent">Start Random Agent</div>
-        <div class="command" id="start5RandomAgents">Start 5 Random Agents</div>
-        <div class="command" id="startManualMode">Start Manual Mode</div>
-        <div class="command" id="startDFS">Start Depth First Search</div>
-        <div class="command" id="undoMove">Undo Move (Manual Mode)</div>
         <div class="command" id="fullReset">Reset</div>
+        <div class="command" id="start5RandomAgents">Start 5 Random Agents</div>
+        <div class="command" id="start10RandomAgents">
+          Start 10 Random Agents
+        </div>
+        <div class="command" id="toggleCelebration">Toggle Celebrations</div>
       </div>
       <div class="command-palette-footer">
         <span class="keyboard-key">p</span> toggle palette &nbsp; &nbsp;
         <span class="keyboard-key"> &#8645;</span> navigate &nbsp; &nbsp;
+        <span class="keyboard-key">esc</span> dismiss
+      </div>
+    </div>
+    <div class="guideModal" id="guide">
+      <div class="guideHeader">Guide</div>
+      <br />
+      <div class="guideRow"><span class="peg"></span><span>Peg</span></div>
+      <div class="guideRow">
+        <span class="moveablePeg"></span
+        ><span>Peg which can be moved, hover to see destination holes</span>
+      </div>
+      <div class="guideRow">
+        <span class="selectedPeg"></span
+        ><span>Peg which is being moved, drag to desired hole</span>
+      </div>
+      <br />
+      <div class="guideRow"><li>Click to move pegs on touch devices</li></div>
+      <div class="guideRow">
+        <li>Completing manual mode might reveal a surprise :&rpar;</li>
+      </div>
+      <div class="guideRow">
+        <li>
+          Resources :
+          <a
+            href="https://www.durangobill.com/Peg33.html"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Durango Bill's Page</a
+          >
+          &nbsp;
+          <a
+            href="https://youtu.be/BMPa0FA65Fk?si=OikkjeDc1riJ9ky1"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Mathologer</a
+          >
+          &nbsp;
+          <a
+            href="https://en.wikipedia.org/wiki/Peg_solitaire"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Wikipedia
+          </a>
+        </li>
+      </div>
+      <br />
+      <div class="command-palette-footer">
+        <span class="keyboard-key">p</span> toggle palette &nbsp; &nbsp;
+        <span class="keyboard-key">g</span> toggle guide &nbsp; &nbsp;
         <span class="keyboard-key">esc</span> dismiss
       </div>
     </div>

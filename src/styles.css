@@ -4,7 +4,7 @@
   --moveable-peg-color: orange;
   --bg-color: white;
   --text-color: black;
-  --hover-color: rgba(97, 96, 96, 0.5);
+  --hover-color: rgba(135, 135, 135, 0.5);
 }
 
 body {
@@ -304,6 +304,62 @@ a {
   font-weight: bold;
 }
 
+.golden {
+  .cell,
+  .allowedCell {
+    border-color: goldenrod;
+    box-shadow: 0 0 10px rgba(255, 223, 0, 0.8);
+  }
+}
+
+.guideModal {
+  display: none ;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 6;
+  background: transparent;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  padding-top: 20px;
+}
+
+.guideHeader {
+  padding: 5px;
+  padding-bottom: 0px;
+  text-align: center;
+  font-size: large;
+}
+
+.guideRow {
+  padding: 5px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-self: center;
+  gap: 10px;
+
+  .peg,
+  .moveablePeg,
+  .movedPeg,
+  .selectedPeg {
+    border: none;
+  }
+}
+
+.guideRow a {
+  text-decoration: underline;
+}
+
+.guideBtn {
+  cursor: pointer;
+}
+
 /*Button CSS */
 .button-39 {
   background-color: #ffffff;
@@ -492,6 +548,14 @@ a {
 
   .themeButton {
     position: unset;
+  }
+
+  .guideModal {
+    width: 99dvw;
+  }
+
+  .guideRow {
+    padding: 5px 0px 5px 10px;
   }
 }
 

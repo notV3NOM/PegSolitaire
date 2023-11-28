@@ -45,11 +45,13 @@ addClickListener("resetBtn", () => pegSolitaireBoard.FullReset());
 addClickListener("undoBtn", () => pegSolitaireBoard.UndoMove());
 document.getElementById("undoBtn").style.display = "none";
 
-addClickListener("startRandomAgent", () => pegSolitaireBoard.RunExperiment(1));
 addClickListener("start5RandomAgents", () =>
   pegSolitaireBoard.RunExperiment(5)
 );
-addClickListener("startManualMode", pegSolitaireBoard.ManualMode);
-addClickListener("startDFS", runDFS);
-addClickListener("undoMove", () => pegSolitaireBoard.UndoMove());
+addClickListener("start10RandomAgents", () =>
+  pegSolitaireBoard.RunExperiment(10)
+);
 addClickListener("fullReset", () => pegSolitaireBoard.FullReset());
+addClickListener("toggleCelebration", () =>
+  pegSolitaireBoard.ToggleCelebrations()
+);
