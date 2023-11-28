@@ -449,7 +449,8 @@ export class PegSolitaireBoard {
     if (len) {
       this.textContainer.textContent = `
     ${this.userMoves} moves done
-    ${len} legal moves can be performed 
+    ${len} legal moves can be performed
+    press g for guide 
     `;
       PegSolitaireBoard.MoveablePegsActual().forEach((peg) => {
         const pegElement = document.getElementById(
